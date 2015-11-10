@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Two Instapaper bookmarklets</title>
+        <link href="/main.css" rel="stylesheet">
+        <meta name="viewport" content="width=device-width">
+    </head>
+    <body>
+        <div id="container">
+<header>
+	<section class="name"><a href="/">Francisco Lobos</a></section>
+	<nav>
+		<ul>
+			<li><a href="/en">Posts</a></li>
+			<li><a href="/en/about">About</a></li>
+		</ul>
+	</nav>
+</header>    <section id="content">
+        <article>
+            <time datetime="2014-08-16T03:55:00+02:00">August 16, 2014</time>
+        <a href="/es/bookmarklets-instapaper" class="translation">leer en español</a>
+        <h1>Two Instapaper bookmarklets</h1>
+            <p>As a child, I read everything I could get my hands on: books, magazines, newspapers, etc. That hasn't changed much, except that now I read mainly articles on the internet. This is where <a href="https://www.instapaper.com/">Instapaper</a> comes into play. It helps me to keep things I can't read right away, and check them later when I have more time. However, I tend to accumulate more than what I can read in my free time. To tackle this problem, I made ​​a couple of bookmarklets that improve my experience with this tool.<sup id="fnref:1"><a class="footnote-ref" href="#fn:1" rel="footnote">1</a></sup></p>
+<h2>Random article</h2>
+<p>Sometimes I don't know which article should I read. In such cases I let the computer decide for me. Looking around I found <a href="https://gist.github.com/sillygwailo/8871248">this bookmarklet</a>, which I modified a bit to suit my needs. Depending on where you are when you click on it, this bookmarklet can do two things:</p>
+<ul>
+<li>If you're not in Instapaper's first page (<code>http://www.instapaper.com/u</code>), it redirects you there.</li>
+<li>But, if you're already there, it chooses an article at random from that page and clicks it.</li>
+</ul>
+<p>To install the bookmarklet, drag the following link to your bookmarks bar.
+<a href="javascript:$('.meta_read_time').each(function(){var e='limegreen',t=parseInt($(this).text().slice(2,5),10);if(t&gt;=20){e='red'}else if(t&gt;=10){e='orange'}$(this).css({'background-color':e,color:'white',border:'2px solid '+e})})">Instapaper: Random</a></p>
+<p>You can also check the code in <a href="https://gist.github.com/flobosg/a2276c80483a4aa01740">this Github Gist</a>.</p>
+<h2>Highlight reading times</h2>
+<p>Unlike their mobile equivalents, the Instapaper web app has no option to filter o sort articles according to their duration. When I have little time to read something, there is no quick way to identify short articles. That's why, according to each article's duration, this bookmarklet colors reading times green (0-9 min), orange (10-19 min) or red (≥ 20 min).<sup id="fnref:2"><a class="footnote-ref" href="#fn:2" rel="footnote">2</a></sup></p>
+<p><img alt="" src="/media/2014/08/instapaper.png" /></p>
+<p>Here is the bookmarklet:
+<a href="javascript:$('.meta_read_time').each(function(){var color;var time = $(this).text();time = time[1] === '%C2%B7' ? parseInt(time.slice(2)) : parseInt(time);if (time &gt;= 20){color = 'red';} else if (time &gt;= 10){color = 'orange';} else {color = &quot;limegreen&quot;;} $(this).css({'background-color': color, 'color': 'white', 'border': '2px solid '+color});})">Instapaper: Highlight times</a></p>
+<p>Like the other bookmarklet, this one is stored as <a href="https://gist.github.com/flobosg/4cfabe3d0592f65ad908">a Github Gist</a> if you want to check it out.</p>
+<p>That's it. If you are Instapaper users, I hope these bookmarklets are as useful to some of you as they are to me. Modify them, share them, tell your friends.</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:1">
+<p>And I took the opportunity to remember some Javascript and jQuery.&#160;<a class="footnote-backref" href="#fnref:1" rev="footnote" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:2">
+<p>This would probably look better as an user script that loads with the page, but I like having the option to activate it only when I need it.&#160;<a class="footnote-backref" href="#fnref:2" rev="footnote" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+        </article>
+            <footer>
+                <!-- <p>&copy; 2012 Francisco Lobos. All rights reserved.</p> -->
+                <p>
+                    Do you have something to say? <a href="/en/about#contact">Contact me</a>.
+                </p>
+            </footer>
+        </div>
+    </body>
+</html>

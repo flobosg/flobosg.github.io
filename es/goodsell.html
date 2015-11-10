@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Aplicando ingeniería reversa a David Goodsell</title>
+        <link href="/main.css" rel="stylesheet">
+        <meta name="viewport" content="width=device-width">
+    </head>
+    <body>
+        <div id="container">
+<header>
+	<section class="name"><a href="/">Francisco Lobos</a></section>
+	<nav>
+		<ul>
+			<li><a href="/es">Artículos</a></li>
+			<li><a href="/es/acerca-de">Acerca de</a></li>
+		</ul>
+	</nav>
+</header>    <section id="content">
+        <article>
+            <time datetime="2015-11-10T00:53:10+01:00">10 de noviembre del 2015</time>
+        <h1>Aplicando ingeniería reversa a David Goodsell</h1>
+            <h2>Introducción</h2>
+<p>Desde hace un tiempo que estoy interesado en la relación existente entre el arte y la biología estructural. En especial, me atraen las diversas formas de representar las estructuras tridimensionales de las macromoléculas biológicas, ya sea mediante gráficos computacionales, animaciones o modelos físicos tangibles.</p>
+<p>Al igual que mucha gente, me gusta el estilo con que David Goodsell ilustra las estructuras de la sección <a href="http://www.rcsb.org/pdb/101/motm_archive.do">Molecule of the Month</a> (MotM) en el Protein Data Bank. Sin embargo, reproducir su aspecto es más complicado de lo que parece. Para generar las figuras de MotM, <a href="http://www.rcsb.org/pdb/static.do?p=education_discussion/molecule_of_the_month/about.html">Goodsell usa software personalizado</a> (aparentemente en Fortran, según <a href="http://www.scilogs.de/detritus/david-goodsell-molek-l-k-nstler-und-wissenschaftler/">este link en alemán</a>). Existen varios tutoriales y herramientas en Internet para emular su apariencia<sup id="fnref:1"><a class="footnote-ref" href="#fn:1" rel="footnote">1</a></sup>, pero ninguno de esos procedimientos me convence totalmente. Sin embargo, tomé algunas ideas de ellos y logré elaborar dos métodos en PyMOL: uno más sencillo y otro más complejo. Al principio solo quería averiguar cómo hacer figuras con el estilo de Goodsell, pero finalmente se transformó en una suerte de obsesión. Espero que les sea útil.</p>
+<h2>Una manera fácil usando PyMOL</h2>
+<p>Para empezar, voy a reproducir la figura que aparece en la <a href="http://www.rcsb.org/pdb/101/motm.do?momID=9">entrada de MoTM del mes de septiembre del año 2000</a>, correspondiente a la lisozima de clara de huevo de gallina (PDB ID: <a href="http://www.rcsb.org/pdb/explore.do?structureId=2LYZ">2LYZ</a>).</p>
+<p>Primero hay que cargar la estructura de 2LYZ (por ejemplo usando <code>fetch 2lyz</code>), para luego remover las aguas con <code>remove solvent</code>, mostrar la proteína como esferas usando <code>show spheres</code>, poner un fondo blanco con <code>bg_color white</code> y coloreando por elemento de acuerdo a su esquema clásico (carbonos blancos, nitrógenos y oxígenos en tonos azulados y rojizos, respectivamente):<sup id="fnref:2"><a class="footnote-ref" href="#fn:2" rel="footnote">2</a></sup></p>
+<div class="highlight"><pre><span class="n">color</span> <span class="n">white</span>
+<span class="n">color</span> <span class="n">lightblue</span><span class="p">,</span> <span class="n">name</span> <span class="n">N</span><span class="o">*</span>
+<span class="n">color</span> <span class="n">blue</span><span class="p">,</span> <span class="n">resn</span> <span class="n">ARG</span><span class="o">+</span><span class="n">LYS</span> <span class="n">and</span> <span class="n">sidechain</span> <span class="n">and</span> <span class="n">name</span> <span class="n">N</span><span class="o">*</span>
+<span class="n">color</span> <span class="n">salmon</span><span class="p">,</span> <span class="n">name</span> <span class="n">O</span><span class="o">*</span>
+<span class="n">color</span> <span class="n">red</span><span class="p">,</span> <span class="n">resn</span> <span class="n">GLU</span><span class="o">+</span><span class="n">ASP</span> <span class="n">and</span> <span class="n">sidechain</span> <span class="n">and</span> <span class="n">name</span> <span class="n">O</span><span class="o">*</span>
+<span class="n">color</span> <span class="n">sulfur</span><span class="p">,</span> <span class="n">name</span> <span class="n">S</span><span class="o">*</span>
+</pre></div>
+
+
+<p>Una vez terminada la preparación de la escena, una forma sencilla de obtener la figura es utilizando estos comandos:</p>
+<div class="highlight"><pre><span class="n">bg_color</span> <span class="n">white</span>
+<span class="n">unset</span> <span class="n">specular</span>
+<span class="n">unset</span> <span class="n">depth_cue</span>
+<span class="n">set</span> <span class="n">ambient</span><span class="p">,</span> <span class="mf">0.6</span>
+<span class="n">set</span> <span class="n">ray_trace_mode</span><span class="p">,</span> <span class="mi">1</span>
+<span class="n">set</span> <span class="n">ray_trace_depth_factor</span><span class="p">,</span> <span class="mi">1</span>
+<span class="n">set</span> <span class="n">ray_trace_disco_factor</span><span class="p">,</span> <span class="mi">1</span>
+</pre></div>
+
+
+<p>Luego de ejecutar el comando <code>ray</code>, debería aparecer algo similar a esto:</p>
+<p><img alt="" src="/media/img/goodsell/2lyz.png" /></p>
+<p>Es posible que sea necesario ajustar el parámetro <code>ambient</code> para evitar la aparición del sombreado en las esferas.<sup id="fnref:3"><a class="footnote-ref" href="#fn:3" rel="footnote">3</a></sup> Además, dependiendo del tamaño de la renderización quizás haya que modificar el valor de <code>ray_trace_gain</code> para alterar el grosor de los bordes.</p>
+<h2>Una manera más complicada</h2>
+<p>Bonnie Scott publicó hace un tiempo <a href="http://www.bmc.med.utoronto.ca/bmcwiki/doku.php/students:how_to_recreate_the_goodsell_molecular_rendering_style">un tutorial</a> en el cual ocupa dos metodologías para obtener el mismo resultado. Una usa <a href="http://www.cgl.ucsf.edu/chimera/">Chimera</a>, mientras que la otra emplea una combinación de <a href="http://epmv.grahamj.com/">ePMV</a> y Cinema 4D. Ambas aproximaciones consisten en renderizar por separado colores, sombras y bordes, para luego unirlas usando algún editor gráfico como Photoshop. Voy a adaptar esa estrategia para PyMOL. Este método es más engorroso que el anterior, pero permite un mayor control sobre el resultado final.</p>
+<p>En este caso voy a crear una imagen de la estructura de una proteína anticongelante del escarabajo <em>Rhagium inquisitor</em> (PDB ID: <a href="http://www.rcsb.org/pdb/explore.do?structureId=4DT5">4DT5</a>). Primero hay que cargar la estructura y preparar la escena:</p>
+<div class="highlight"><pre><span class="n">hide</span> <span class="n">all</span>
+<span class="n">remove</span> <span class="n">solvent</span>
+<span class="n">remove</span> <span class="n">hetatm</span>
+<span class="n">show</span> <span class="n">spheres</span><span class="p">,</span> <span class="n">polymer</span>
+<span class="n">unset</span> <span class="n">depth_cue</span>
+<span class="n">unset</span> <span class="n">specular</span>
+<span class="n">unset</span> <span class="n">ray_shadow</span>
+<span class="n">set</span> <span class="n">ambient</span><span class="p">,</span> <span class="mi">1</span>
+<span class="n">bg_color</span> <span class="n">black</span>
+</pre></div>
+
+
+<p>Luego se renderizan:</p>
+<ol>
+<li>
+<p>La máscara alfa de la proteína completa:</p>
+<div class="highlight"><pre><span class="n">color</span> <span class="n">white</span><span class="p">,</span> <span class="n">polymer</span>
+<span class="n">ray</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">1000</span>
+<span class="n">save</span> <span class="n">protein</span><span class="p">.</span><span class="n">png</span>
+</pre></div>
+
+
+</li>
+<li>
+<p>La máscara alfa de los átomos de nitrógeno y oxígeno:</p>
+<div class="highlight"><pre><span class="n">color</span> <span class="n">black</span><span class="p">,</span> <span class="n">polymer</span>
+<span class="n">color</span> <span class="n">white</span><span class="p">,</span> <span class="n">name</span> <span class="n">N</span><span class="o">*+</span><span class="n">O</span><span class="o">*</span>
+<span class="n">ray</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">1000</span>
+<span class="n">save</span> <span class="n">n</span><span class="o">+</span><span class="n">o</span><span class="p">.</span><span class="n">png</span>
+</pre></div>
+
+
+</li>
+<li>
+<p>Las sombras:</p>
+<div class="highlight"><pre><span class="n">bg_color</span> <span class="n">white</span>
+<span class="n">util</span><span class="p">.</span><span class="n">ray_shadows</span><span class="p">(</span><span class="err">&#39;</span><span class="n">black</span><span class="err">&#39;</span><span class="p">)</span>
+<span class="n">set</span> <span class="n">reflect</span><span class="p">,</span> <span class="mi">1</span>
+<span class="n">set</span> <span class="n">reflect_power</span><span class="p">,</span> <span class="mi">0</span>
+<span class="n">color</span> <span class="n">white</span><span class="p">,</span> <span class="n">polymer</span>
+<span class="n">ray</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">1000</span>
+<span class="n">save</span> <span class="n">shadows</span><span class="p">.</span><span class="n">png</span>
+</pre></div>
+
+
+</li>
+<li>
+<p>Y, finalmente, el z-buffer<sup id="fnref:4"><a class="footnote-ref" href="#fn:4" rel="footnote">4</a></sup>:</p>
+<div class="highlight"><pre><span class="n">bg_color</span> <span class="n">black</span>
+<span class="n">set</span> <span class="n">depth_cue</span>
+<span class="n">unset</span> <span class="n">ray_shadow</span>
+<span class="n">set</span> <span class="n">fog_start</span><span class="p">,</span> <span class="mi">0</span>
+<span class="n">clip</span> <span class="n">atoms</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">all</span>
+<span class="n">color</span> <span class="n">white</span><span class="p">,</span> <span class="n">polymer</span>
+<span class="n">ray</span> <span class="mi">1000</span><span class="p">,</span> <span class="mi">1000</span>
+<span class="n">save</span> <span class="n">z</span><span class="o">-</span><span class="n">buffer</span><span class="p">.</span><span class="n">png</span>
+</pre></div>
+
+
+</li>
+</ol>
+<p>Con lo que se obtienen las siguientes imágenes:</p>
+<!-- <img src="/media/2014/12/layers.jpg" class="fullwidth"> -->
+
+<p><img alt="" src="/media/img/goodsell/layers.jpg" /></p>
+<p>Estas deben ser abiertas como capas en Photoshop, GIMP, etc. y procesadas de la siguiente manera:</p>
+<ol>
+<li>La máscara alfa de la proteína completa y la de los nitrógenos y oxígenos se transforman en una máscara rápida y se rellenan del color deseado.</li>
+<li>Este paso es opcional: Sobre la imagen de las sombras se aplica desenfoque gaussiano y la máscara alfa de la proteína completa para que las sombras no sobrepasen el borde de la proteína.</li>
+<li>Del z-buffer se pueden derivar los bordes usando, por ejemplo, el operador Sobel en GIMP (Filtros ‣ Detectar bordes ‣ Arista) o el filtro "Hallar bordes" de Photoshop (Filtro ‣ Estilizar ‣ Hallar bordes). Luego se deben ajustar los niveles o curvas para eliminar los bordes falsos del interior de las esferas. Se pueden encontrar más detalles en <a href="http://chemistry.stackexchange.com/questions/484/what-software-is-used-to-generate-the-pdb-molecule-of-the-month-images#486">este tutorial</a>.</li>
+</ol>
+<p>Al finalizar estos pasos, se obtienen las siguientes capas:</p>
+<p><img alt="" src="/media/img/goodsell/layers-2.jpg" /></p>
+<p>La cuales se juntan (los bordes y sombras van apilados en modo Multiplicar) para obtener esto:</p>
+<p><img src="/media/img/goodsell/4dt5.jpg" style="width:80%;"></p>
+<p>Como pueden ver, esta estructura contiene un arreglo muy ordenado de treoninas, encargadas de coordinar moléculas de agua, logrando detener el crecimiento de los cristales de hielo que crecen en el ambiente celular.</p>
+<h2>Más información</h2>
+<p>Si quieren ver más sobre la obra de David Goodsell, revisen <a href="http://mgl.scripps.edu/people/goodsell">su página web</a>, la sección <a href="http://www.rcsb.org/pdb/101/motm_archive.do">Molecule of the Month</a> en el PDB, o su libro <a href="http://mgl.scripps.edu/people/goodsell/books/MoL2-preview.html">The Machinery of Life</a>, el cual contiene varias de sus ilustraciones.</p>
+<!-- 
+[^3]: Richardson, J. S. (1981) The Anatomy and Taxonomy of Protein Structure. *Advances in Protein Chemistry* 34, 167-339. Disponible [aquí][richardson81]. -->
+
+<!-- [^5]: `fog_start` acepta valores entre 0 y 1. Por defecto es igual a 0.45. -->
+
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:1">
+<p>Por ejemplo: Usando shaders GLSL con <a href="https://kpwu.wordpress.com/2012/06/28/pymol-draw-goodsell-like-view-using-glsl/">PyMOL</a> y <a href="http://www.ks.uiuc.edu/Research/vmd/minitutorials/glsloutline/">VMD</a>. <a href="http://chemistry.stackexchange.com/questions/484/what-software-is-used-to-generate-the-pdb-molecule-of-the-month-images#486">Un tutorial en Chemistry Stack Exchange</a> con VMD, Blender y Photoshop. Tutoriales en <a href="http://www.pymolwiki.org/index.php/Gallery">PyMOL</a>, <a href="http://www.cgl.ucsf.edu/chimera/ImageGallery/entries/clathrin/clathrin.html">Chimera</a> y <a href="http://pmvbase.blogspot.de/2010/04/making-david-goodsell-like.html">PMV</a>. También existen programas como <a href="http://qutemol.sourceforge.net/">Qutemol</a> y <a href="http://people.cryst.bbk.ac.uk/~ubcg05s/zink/zink.htm">Zink!</a>.&#160;<a class="footnote-backref" href="#fnref:1" rev="footnote" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:2">
+<p>Esta combinación aparece por última vez en MoTM en <a href="http://www.pdb.org/pdb/101/motm.do?momID=70">octubre del 2005</a>.
+Una paleta similar pero, en mi opinión, más moderna, apareció recientemente en la entrada de <a href="http://www.pdb.org/pdb/101/motm.do?momID=162">junio del 2013</a>.
+Actualmente Goodsell utiliza en la mayoría de las ocasiones colores arbitrarios para los carbonos y un tono más oscuro para nitrógeno, oxígeno y azufre.&#160;<a class="footnote-backref" href="#fnref:2" rev="footnote" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:3">
+<p>El parámetro <code>ambient</code> controla la cantidad de luz ambiente en la escena. Acepta valores entre 0 y 1, y por defecto es igual a 0.1.&#160;<a class="footnote-backref" href="#fnref:3" rev="footnote" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+<li id="fn:4">
+<p>A grandes rasgos, el <a href="https://en.wikipedia.org/wiki/Z-buffering">z-buffer</a> es una representación de la profundidad a la que se encuentran los objetos de una escena.
+<!--       En el z-buffer mostrado en la imagen de abajo (<a href="https://en.wikipedia.org/wiki/Z-buffering">original</a>), mientras más blanco, mayor cercanía a la cámara.--></p>
+<p><!-- <img src="/media/2013/04/z-buffer.png" style="width:25%;"> -->&#160;<a class="footnote-backref" href="#fnref:4" rev="footnote" title="Jump back to footnote 4 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+        </article>
+            <footer>
+                <!-- <p>&copy; 2012 Francisco Lobos. All rights reserved.</p> -->
+                <p>
+                    ¿Tienes algo que decir? <a href="/es/acerca-de#contacto">Contáctame</a>.
+                </p>
+            </footer>
+        </div>
+    </body>
+</html>

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Dos bookmarklets para Instapaper</title>
+        <link href="/main.css" rel="stylesheet">
+        <meta name="viewport" content="width=device-width">
+    </head>
+    <body>
+        <div id="container">
+<header>
+	<section class="name"><a href="/">Francisco Lobos</a></section>
+	<nav>
+		<ul>
+			<li><a href="/es">Artículos</a></li>
+			<li><a href="/es/acerca-de">Acerca de</a></li>
+		</ul>
+	</nav>
+</header>    <section id="content">
+        <article>
+            <time datetime="2014-08-16T01:36:00+02:00">16 de agosto del 2014</time>
+        <a href="/en/instapaper-bookmarklets" class="translation">read in English</a>
+        <h1>Dos bookmarklets para Instapaper</h1>
+            <p>Cuando era niño, leía todo lo que se me cruzaba por delante: libros, revistas, diarios, etc. Eso no ha cambiado mucho, salvo que ahora lo que leo principalmente son artículos en internet. Aquí es donde entra <a href="https://www.instapaper.com/">Instapaper</a>, el cual me ayuda a guardar cosas que no puedo revisar de inmediato, para luego leerlas cuando tenga más tiempo.
+Sin embargo, tiendo a acumular más de lo que puedo leer en mi tiempo libre. Para atacar ese problema, hice un par de bookmarklets que mejoran mi experiencia con esta herramienta.<sup id="fnref:1"><a class="footnote-ref" href="#fn:1" rel="footnote">1</a></sup> </p>
+<h2>Artículo al azar</h2>
+<p>Hay ocasiones en que no sé qué artículo leer. En esos casos preferiría que el computador decidiera por mí. Buscando por ahí encontré <a href="https://gist.github.com/sillygwailo/8871248">este bookmarklet</a>, el cual modifiqué un poco para ajustarlo a mis necesidades.
+Dependiendo de la ubicación en que estés cuando haces click en él, este bookmarklet puede hacer dos cosas:</p>
+<ul>
+<li>Si no estás en la primera página de artículos en Instapaper (<code>http://www.instapaper.com/u</code>), te dirige hacia allá.</li>
+<li>En cambio, si ya te encuentras allí, el bookmarklet elige un artículo al azar de dicha página y abre el link.</li>
+</ul>
+<p>Para instalar el bookmarklet, arrastra el siguiente link a tu barra de marcadores:
+<a href="javascript:$('.meta_read_time').each(function(){var e='limegreen',t=parseInt($(this).text().slice(2,5),10);if(t&gt;=20){e='red'}else if(t&gt;=10){e='orange'}$(this).css({'background-color':e,color:'white',border:'2px solid '+e})})">Instapaper: Al azar</a></p>
+<p>También puedes revisar <a href="https://gist.github.com/flobosg/a2276c80483a4aa01740">este Gist en Github</a> con el código.</p>
+<h2>Destacar tiempos de lectura</h2>
+<p>A diferencia de sus equivalentes móviles, la aplicación web de Instapaper no tiene ninguna opción para filtrar o reordenar los artículos de acuerdo a su duración. Cuando tengo poco tiempo para leer algo, no tengo forma alguna de identificar rápidamente los artículos más cortos. Es por ello que, de acuerdo a la duración de cada artículo, este bookmarklet colorea los tiempos de lectura con verde (0-9 min), naranja (10-19 min) o rojo (≥ 20 min).<sup id="fnref:2"><a class="footnote-ref" href="#fn:2" rel="footnote">2</a></sup></p>
+<p><img alt="" src="/media/2014/08/instapaper.png" /></p>
+<p>Aquí está el bookmarklet:
+<a href="javascript:$('.meta_read_time').each(function(){var color;var time = $(this).text();time = time[1] === '%C2%B7' ? parseInt(time.slice(2)) : parseInt(time);if (time &gt;= 20){color = 'red';} else if (time &gt;= 10){color = 'orange';} else {color = &quot;limegreen&quot;;} $(this).css({'background-color': color, 'color': 'white', 'border': '2px solid '+color});})">Instapaper: Destacar tiempos</a></p>
+<p>Al igual que el otro bookmarklet, éste se encuentra almacenado en <a href="https://gist.github.com/flobosg/4cfabe3d0592f65ad908">un Gist en Github</a> por si quieren revisarlo.</p>
+<p>Eso es todo. Si son usuarios de Instapaper, espero que estos bookmarklets sean tan útiles para algunos de ustedes como lo son para mí. Modifíquenlos, compártanlos, cuéntenles a sus amigos.</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:1">
+<p>Y de paso, aprovecho de recordar algo de Javascript y jQuery.&#160;<a class="footnote-backref" href="#fnref:1" rev="footnote" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:2">
+<p>Esto probablemente quedaría mejor como un user script que se cargue junto con la página, pero me gusta tener la opción de activarlo cuando quiera.&#160;<a class="footnote-backref" href="#fnref:2" rev="footnote" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+        </article>
+            <footer>
+                <!-- <p>&copy; 2012 Francisco Lobos. All rights reserved.</p> -->
+                <p>
+                    ¿Tienes algo que decir? <a href="/es/acerca-de#contacto">Contáctame</a>.
+                </p>
+            </footer>
+        </div>
+    </body>
+</html>

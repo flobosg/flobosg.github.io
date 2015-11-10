@@ -1,0 +1,238 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom"><title>Francisco Lobos</title><link href="http://franciscolobos.com/" rel="alternate"></link><link href="http://franciscolobos.com/feeds/all-es.atom.xml" rel="self"></link><id>http://franciscolobos.com/</id><updated>2015-11-10T00:53:10+01:00</updated><entry><title>Aplicando ingeniería reversa a David Goodsell</title><link href="http://franciscolobos.com//es/goodsell" rel="alternate"></link><updated>2015-11-10T00:53:10+01:00</updated><author><name>Francisco Lobos</name></author><id>tag:franciscolobos.com,2015-11-10:es/goodsell</id><summary type="html">&lt;h2&gt;Introducción&lt;/h2&gt;
+&lt;p&gt;Desde hace un tiempo que estoy interesado en la relación existente entre el arte y la biología estructural. En especial, me atraen las diversas formas de representar las estructuras tridimensionales de las macromoléculas biológicas, ya sea mediante gráficos computacionales, animaciones o modelos físicos tangibles.&lt;/p&gt;
+&lt;p&gt;Al igual que mucha gente, me gusta el estilo con que David Goodsell ilustra las estructuras de la sección &lt;a href="http://www.rcsb.org/pdb/101/motm_archive.do"&gt;Molecule of the Month&lt;/a&gt; (MotM) en el Protein Data Bank. Sin embargo, reproducir su aspecto es más complicado de lo que parece. Para generar las figuras de MotM, &lt;a href="http://www.rcsb.org/pdb/static.do?p=education_discussion/molecule_of_the_month/about.html"&gt;Goodsell usa software personalizado&lt;/a&gt; (aparentemente en Fortran, según &lt;a href="http://www.scilogs.de/detritus/david-goodsell-molek-l-k-nstler-und-wissenschaftler/"&gt;este link en alemán&lt;/a&gt;). Existen varios tutoriales y herramientas en Internet para emular su apariencia&lt;sup id="fnref:1"&gt;&lt;a class="footnote-ref" href="#fn:1" rel="footnote"&gt;1&lt;/a&gt;&lt;/sup&gt;, pero ninguno de esos procedimientos me convence totalmente. Sin embargo, tomé algunas ideas de ellos y logré elaborar dos métodos en PyMOL: uno más sencillo y otro más complejo. Al principio solo quería averiguar cómo hacer figuras con el estilo de Goodsell, pero finalmente se transformó en una suerte de obsesión. Espero que les sea útil.&lt;/p&gt;
+&lt;h2&gt;Una manera fácil usando PyMOL&lt;/h2&gt;
+&lt;p&gt;Para empezar, voy a reproducir la figura que aparece en la &lt;a href="http://www.rcsb.org/pdb/101/motm.do?momID=9"&gt;entrada de MoTM del mes de septiembre del año 2000&lt;/a&gt;, correspondiente a la lisozima de clara de huevo de gallina (PDB ID: &lt;a href="http://www.rcsb.org/pdb/explore.do?structureId=2LYZ"&gt;2LYZ&lt;/a&gt;).&lt;/p&gt;
+&lt;p&gt;Primero hay que cargar la estructura de 2LYZ (por ejemplo usando &lt;code&gt;fetch 2lyz&lt;/code&gt;), para luego remover las aguas con &lt;code&gt;remove solvent&lt;/code&gt;, mostrar la proteína como esferas usando &lt;code&gt;show spheres&lt;/code&gt;, poner un fondo blanco con &lt;code&gt;bg_color white&lt;/code&gt; y coloreando por elemento de acuerdo a su esquema clásico (carbonos blancos, nitrógenos y oxígenos en tonos azulados y rojizos, respectivamente):&lt;sup id="fnref:2"&gt;&lt;a class="footnote-ref" href="#fn:2" rel="footnote"&gt;2&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;color&lt;/span&gt; &lt;span class="n"&gt;white&lt;/span&gt;
+&lt;span class="n"&gt;color&lt;/span&gt; &lt;span class="n"&gt;lightblue&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="n"&gt;N&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;
+&lt;span class="n"&gt;color&lt;/span&gt; &lt;span class="n"&gt;blue&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;resn&lt;/span&gt; &lt;span class="n"&gt;ARG&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="n"&gt;LYS&lt;/span&gt; &lt;span class="n"&gt;and&lt;/span&gt; &lt;span class="n"&gt;sidechain&lt;/span&gt; &lt;span class="n"&gt;and&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="n"&gt;N&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;
+&lt;span class="n"&gt;color&lt;/span&gt; &lt;span class="n"&gt;salmon&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="n"&gt;O&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;
+&lt;span class="n"&gt;color&lt;/span&gt; &lt;span class="n"&gt;red&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;resn&lt;/span&gt; &lt;span class="n"&gt;GLU&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="n"&gt;ASP&lt;/span&gt; &lt;span class="n"&gt;and&lt;/span&gt; &lt;span class="n"&gt;sidechain&lt;/span&gt; &lt;span class="n"&gt;and&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="n"&gt;O&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;
+&lt;span class="n"&gt;color&lt;/span&gt; &lt;span class="n"&gt;sulfur&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="n"&gt;S&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Una vez terminada la preparación de la escena, una forma sencilla de obtener la figura es utilizando estos comandos:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;bg_color&lt;/span&gt; &lt;span class="n"&gt;white&lt;/span&gt;
+&lt;span class="n"&gt;unset&lt;/span&gt; &lt;span class="n"&gt;specular&lt;/span&gt;
+&lt;span class="n"&gt;unset&lt;/span&gt; &lt;span class="n"&gt;depth_cue&lt;/span&gt;
+&lt;span class="n"&gt;set&lt;/span&gt; &lt;span class="n"&gt;ambient&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mf"&gt;0.6&lt;/span&gt;
+&lt;span class="n"&gt;set&lt;/span&gt; &lt;span class="n"&gt;ray_trace_mode&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
+&lt;span class="n"&gt;set&lt;/span&gt; &lt;span class="n"&gt;ray_trace_depth_factor&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
+&lt;span class="n"&gt;set&lt;/span&gt; &lt;span class="n"&gt;ray_trace_disco_factor&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Luego de ejecutar el comando &lt;code&gt;ray&lt;/code&gt;, debería aparecer algo similar a esto:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="/media/img/goodsell/2lyz.png" /&gt;&lt;/p&gt;
+&lt;p&gt;Es posible que sea necesario ajustar el parámetro &lt;code&gt;ambient&lt;/code&gt; para evitar la aparición del sombreado en las esferas.&lt;sup id="fnref:3"&gt;&lt;a class="footnote-ref" href="#fn:3" rel="footnote"&gt;3&lt;/a&gt;&lt;/sup&gt; Además, dependiendo del tamaño de la renderización quizás haya que modificar el valor de &lt;code&gt;ray_trace_gain&lt;/code&gt; para alterar el grosor de los bordes.&lt;/p&gt;
+&lt;h2&gt;Una manera más complicada&lt;/h2&gt;
+&lt;p&gt;Bonnie Scott publicó hace un tiempo &lt;a href="http://www.bmc.med.utoronto.ca/bmcwiki/doku.php/students:how_to_recreate_the_goodsell_molecular_rendering_style"&gt;un tutorial&lt;/a&gt; en el cual ocupa dos metodologías para obtener el mismo resultado. Una usa &lt;a href="http://www.cgl.ucsf.edu/chimera/"&gt;Chimera&lt;/a&gt;, mientras que la otra emplea una combinación de &lt;a href="http://epmv.grahamj.com/"&gt;ePMV&lt;/a&gt; y Cinema 4D. Ambas aproximaciones consisten en renderizar por separado colores, sombras y bordes, para luego unirlas usando algún editor gráfico como Photoshop. Voy a adaptar esa estrategia para PyMOL. Este método es más engorroso que el anterior, pero permite un mayor control sobre el resultado final.&lt;/p&gt;
+&lt;p&gt;En este caso voy a crear una imagen de la estructura de una proteína anticongelante del escarabajo &lt;em&gt;Rhagium inquisitor&lt;/em&gt; (PDB ID: &lt;a href="http://www.rcsb.org/pdb/explore.do?structureId=4DT5"&gt;4DT5&lt;/a&gt;). Primero hay que cargar la estructura y preparar la escena:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;hide&lt;/span&gt; &lt;span class="n"&gt;all&lt;/span&gt;
+&lt;span class="n"&gt;remove&lt;/span&gt; &lt;span class="n"&gt;solvent&lt;/span&gt;
+&lt;span class="n"&gt;remove&lt;/span&gt; &lt;span class="n"&gt;hetatm&lt;/span&gt;
+&lt;span class="n"&gt;show&lt;/span&gt; &lt;span class="n"&gt;spheres&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;polymer&lt;/span&gt;
+&lt;span class="n"&gt;unset&lt;/span&gt; &lt;span class="n"&gt;depth_cue&lt;/span&gt;
+&lt;span class="n"&gt;unset&lt;/span&gt; &lt;span class="n"&gt;specular&lt;/span&gt;
+&lt;span class="n"&gt;unset&lt;/span&gt; &lt;span class="n"&gt;ray_shadow&lt;/span&gt;
+&lt;span class="n"&gt;set&lt;/span&gt; &lt;span class="n"&gt;ambient&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
+&lt;span class="n"&gt;bg_color&lt;/span&gt; &lt;span class="n"&gt;black&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;p&gt;Luego se renderizan:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;
+&lt;p&gt;La máscara alfa de la proteína completa:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;color&lt;/span&gt; &lt;span class="n"&gt;white&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;polymer&lt;/span&gt;
+&lt;span class="n"&gt;ray&lt;/span&gt; &lt;span class="mi"&gt;1000&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1000&lt;/span&gt;
+&lt;span class="n"&gt;save&lt;/span&gt; &lt;span class="n"&gt;protein&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;png&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;La máscara alfa de los átomos de nitrógeno y oxígeno:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;color&lt;/span&gt; &lt;span class="n"&gt;black&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;polymer&lt;/span&gt;
+&lt;span class="n"&gt;color&lt;/span&gt; &lt;span class="n"&gt;white&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;name&lt;/span&gt; &lt;span class="n"&gt;N&lt;/span&gt;&lt;span class="o"&gt;*+&lt;/span&gt;&lt;span class="n"&gt;O&lt;/span&gt;&lt;span class="o"&gt;*&lt;/span&gt;
+&lt;span class="n"&gt;ray&lt;/span&gt; &lt;span class="mi"&gt;1000&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1000&lt;/span&gt;
+&lt;span class="n"&gt;save&lt;/span&gt; &lt;span class="n"&gt;n&lt;/span&gt;&lt;span class="o"&gt;+&lt;/span&gt;&lt;span class="n"&gt;o&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;png&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Las sombras:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;bg_color&lt;/span&gt; &lt;span class="n"&gt;white&lt;/span&gt;
+&lt;span class="n"&gt;util&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;ray_shadows&lt;/span&gt;&lt;span class="p"&gt;(&lt;/span&gt;&lt;span class="err"&gt;&amp;#39;&lt;/span&gt;&lt;span class="n"&gt;black&lt;/span&gt;&lt;span class="err"&gt;&amp;#39;&lt;/span&gt;&lt;span class="p"&gt;)&lt;/span&gt;
+&lt;span class="n"&gt;set&lt;/span&gt; &lt;span class="n"&gt;reflect&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1&lt;/span&gt;
+&lt;span class="n"&gt;set&lt;/span&gt; &lt;span class="n"&gt;reflect_power&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;
+&lt;span class="n"&gt;color&lt;/span&gt; &lt;span class="n"&gt;white&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;polymer&lt;/span&gt;
+&lt;span class="n"&gt;ray&lt;/span&gt; &lt;span class="mi"&gt;1000&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1000&lt;/span&gt;
+&lt;span class="n"&gt;save&lt;/span&gt; &lt;span class="n"&gt;shadows&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;png&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Y, finalmente, el z-buffer&lt;sup id="fnref:4"&gt;&lt;a class="footnote-ref" href="#fn:4" rel="footnote"&gt;4&lt;/a&gt;&lt;/sup&gt;:&lt;/p&gt;
+&lt;div class="highlight"&gt;&lt;pre&gt;&lt;span class="n"&gt;bg_color&lt;/span&gt; &lt;span class="n"&gt;black&lt;/span&gt;
+&lt;span class="n"&gt;set&lt;/span&gt; &lt;span class="n"&gt;depth_cue&lt;/span&gt;
+&lt;span class="n"&gt;unset&lt;/span&gt; &lt;span class="n"&gt;ray_shadow&lt;/span&gt;
+&lt;span class="n"&gt;set&lt;/span&gt; &lt;span class="n"&gt;fog_start&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;0&lt;/span&gt;
+&lt;span class="n"&gt;clip&lt;/span&gt; &lt;span class="n"&gt;atoms&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;2&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;all&lt;/span&gt;
+&lt;span class="n"&gt;color&lt;/span&gt; &lt;span class="n"&gt;white&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="n"&gt;polymer&lt;/span&gt;
+&lt;span class="n"&gt;ray&lt;/span&gt; &lt;span class="mi"&gt;1000&lt;/span&gt;&lt;span class="p"&gt;,&lt;/span&gt; &lt;span class="mi"&gt;1000&lt;/span&gt;
+&lt;span class="n"&gt;save&lt;/span&gt; &lt;span class="n"&gt;z&lt;/span&gt;&lt;span class="o"&gt;-&lt;/span&gt;&lt;span class="n"&gt;buffer&lt;/span&gt;&lt;span class="p"&gt;.&lt;/span&gt;&lt;span class="n"&gt;png&lt;/span&gt;
+&lt;/pre&gt;&lt;/div&gt;
+
+
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Con lo que se obtienen las siguientes imágenes:&lt;/p&gt;
+&lt;!-- &lt;img src="/media/2014/12/layers.jpg" class="fullwidth"&gt; --&gt;
+
+&lt;p&gt;&lt;img alt="" src="/media/img/goodsell/layers.jpg" /&gt;&lt;/p&gt;
+&lt;p&gt;Estas deben ser abiertas como capas en Photoshop, GIMP, etc. y procesadas de la siguiente manera:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;La máscara alfa de la proteína completa y la de los nitrógenos y oxígenos se transforman en una máscara rápida y se rellenan del color deseado.&lt;/li&gt;
+&lt;li&gt;Este paso es opcional: Sobre la imagen de las sombras se aplica desenfoque gaussiano y la máscara alfa de la proteína completa para que las sombras no sobrepasen el borde de la proteína.&lt;/li&gt;
+&lt;li&gt;Del z-buffer se pueden derivar los bordes usando, por ejemplo, el operador Sobel en GIMP (Filtros ‣ Detectar bordes ‣ Arista) o el filtro "Hallar bordes" de Photoshop (Filtro ‣ Estilizar ‣ Hallar bordes). Luego se deben ajustar los niveles o curvas para eliminar los bordes falsos del interior de las esferas. Se pueden encontrar más detalles en &lt;a href="http://chemistry.stackexchange.com/questions/484/what-software-is-used-to-generate-the-pdb-molecule-of-the-month-images#486"&gt;este tutorial&lt;/a&gt;.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Al finalizar estos pasos, se obtienen las siguientes capas:&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="/media/img/goodsell/layers-2.jpg" /&gt;&lt;/p&gt;
+&lt;p&gt;La cuales se juntan (los bordes y sombras van apilados en modo Multiplicar) para obtener esto:&lt;/p&gt;
+&lt;p&gt;&lt;img src="/media/img/goodsell/4dt5.jpg" style="width:80%;"&gt;&lt;/p&gt;
+&lt;p&gt;Como pueden ver, esta estructura contiene un arreglo muy ordenado de treoninas, encargadas de coordinar moléculas de agua, logrando detener el crecimiento de los cristales de hielo que crecen en el ambiente celular.&lt;/p&gt;
+&lt;h2&gt;Más información&lt;/h2&gt;
+&lt;p&gt;Si quieren ver más sobre la obra de David Goodsell, revisen &lt;a href="http://mgl.scripps.edu/people/goodsell"&gt;su página web&lt;/a&gt;, la sección &lt;a href="http://www.rcsb.org/pdb/101/motm_archive.do"&gt;Molecule of the Month&lt;/a&gt; en el PDB, o su libro &lt;a href="http://mgl.scripps.edu/people/goodsell/books/MoL2-preview.html"&gt;The Machinery of Life&lt;/a&gt;, el cual contiene varias de sus ilustraciones.&lt;/p&gt;
+&lt;!-- 
+[^3]: Richardson, J. S. (1981) The Anatomy and Taxonomy of Protein Structure. *Advances in Protein Chemistry* 34, 167-339. Disponible [aquí][richardson81]. --&gt;
+
+&lt;!-- [^5]: `fog_start` acepta valores entre 0 y 1. Por defecto es igual a 0.45. --&gt;
+
+&lt;div class="footnote"&gt;
+&lt;hr /&gt;
+&lt;ol&gt;
+&lt;li id="fn:1"&gt;
+&lt;p&gt;Por ejemplo: Usando shaders GLSL con &lt;a href="https://kpwu.wordpress.com/2012/06/28/pymol-draw-goodsell-like-view-using-glsl/"&gt;PyMOL&lt;/a&gt; y &lt;a href="http://www.ks.uiuc.edu/Research/vmd/minitutorials/glsloutline/"&gt;VMD&lt;/a&gt;. &lt;a href="http://chemistry.stackexchange.com/questions/484/what-software-is-used-to-generate-the-pdb-molecule-of-the-month-images#486"&gt;Un tutorial en Chemistry Stack Exchange&lt;/a&gt; con VMD, Blender y Photoshop. Tutoriales en &lt;a href="http://www.pymolwiki.org/index.php/Gallery"&gt;PyMOL&lt;/a&gt;, &lt;a href="http://www.cgl.ucsf.edu/chimera/ImageGallery/entries/clathrin/clathrin.html"&gt;Chimera&lt;/a&gt; y &lt;a href="http://pmvbase.blogspot.de/2010/04/making-david-goodsell-like.html"&gt;PMV&lt;/a&gt;. También existen programas como &lt;a href="http://qutemol.sourceforge.net/"&gt;Qutemol&lt;/a&gt; y &lt;a href="http://people.cryst.bbk.ac.uk/~ubcg05s/zink/zink.htm"&gt;Zink!&lt;/a&gt;.&amp;#160;&lt;a class="footnote-backref" href="#fnref:1" rev="footnote" title="Jump back to footnote 1 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id="fn:2"&gt;
+&lt;p&gt;Esta combinación aparece por última vez en MoTM en &lt;a href="http://www.pdb.org/pdb/101/motm.do?momID=70"&gt;octubre del 2005&lt;/a&gt;.
+Una paleta similar pero, en mi opinión, más moderna, apareció recientemente en la entrada de &lt;a href="http://www.pdb.org/pdb/101/motm.do?momID=162"&gt;junio del 2013&lt;/a&gt;.
+Actualmente Goodsell utiliza en la mayoría de las ocasiones colores arbitrarios para los carbonos y un tono más oscuro para nitrógeno, oxígeno y azufre.&amp;#160;&lt;a class="footnote-backref" href="#fnref:2" rev="footnote" title="Jump back to footnote 2 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id="fn:3"&gt;
+&lt;p&gt;El parámetro &lt;code&gt;ambient&lt;/code&gt; controla la cantidad de luz ambiente en la escena. Acepta valores entre 0 y 1, y por defecto es igual a 0.1.&amp;#160;&lt;a class="footnote-backref" href="#fnref:3" rev="footnote" title="Jump back to footnote 3 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id="fn:4"&gt;
+&lt;p&gt;A grandes rasgos, el &lt;a href="https://en.wikipedia.org/wiki/Z-buffering"&gt;z-buffer&lt;/a&gt; es una representación de la profundidad a la que se encuentran los objetos de una escena.
+&lt;!--       En el z-buffer mostrado en la imagen de abajo (&lt;a href="https://en.wikipedia.org/wiki/Z-buffering"&gt;original&lt;/a&gt;), mientras más blanco, mayor cercanía a la cámara.--&gt;&lt;/p&gt;
+&lt;p&gt;&lt;!-- &lt;img src="/media/2013/04/z-buffer.png" style="width:25%;"&gt; --&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:4" rev="footnote" title="Jump back to footnote 4 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;</summary></entry><entry><title>Dos bookmarklets para Instapaper</title><link href="http://franciscolobos.com//es/bookmarklets-instapaper" rel="alternate"></link><updated>2014-08-16T01:36:00+02:00</updated><author><name>Francisco Lobos</name></author><id>tag:franciscolobos.com,2014-08-16:es/bookmarklets-instapaper</id><summary type="html">&lt;p&gt;Cuando era niño, leía todo lo que se me cruzaba por delante: libros, revistas, diarios, etc. Eso no ha cambiado mucho, salvo que ahora lo que leo principalmente son artículos en internet. Aquí es donde entra &lt;a href="https://www.instapaper.com/"&gt;Instapaper&lt;/a&gt;, el cual me ayuda a guardar cosas que no puedo revisar de inmediato, para luego leerlas cuando tenga más tiempo.
+Sin embargo, tiendo a acumular más de lo que puedo leer en mi tiempo libre. Para atacar ese problema, hice un par de bookmarklets que mejoran mi experiencia con esta herramienta.&lt;sup id="fnref:1"&gt;&lt;a class="footnote-ref" href="#fn:1" rel="footnote"&gt;1&lt;/a&gt;&lt;/sup&gt; &lt;/p&gt;
+&lt;h2&gt;Artículo al azar&lt;/h2&gt;
+&lt;p&gt;Hay ocasiones en que no sé qué artículo leer. En esos casos preferiría que el computador decidiera por mí. Buscando por ahí encontré &lt;a href="https://gist.github.com/sillygwailo/8871248"&gt;este bookmarklet&lt;/a&gt;, el cual modifiqué un poco para ajustarlo a mis necesidades.
+Dependiendo de la ubicación en que estés cuando haces click en él, este bookmarklet puede hacer dos cosas:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;Si no estás en la primera página de artículos en Instapaper (&lt;code&gt;http://www.instapaper.com/u&lt;/code&gt;), te dirige hacia allá.&lt;/li&gt;
+&lt;li&gt;En cambio, si ya te encuentras allí, el bookmarklet elige un artículo al azar de dicha página y abre el link.&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Para instalar el bookmarklet, arrastra el siguiente link a tu barra de marcadores:
+&lt;a href="javascript:$('.meta_read_time').each(function(){var e='limegreen',t=parseInt($(this).text().slice(2,5),10);if(t&amp;gt;=20){e='red'}else if(t&amp;gt;=10){e='orange'}$(this).css({'background-color':e,color:'white',border:'2px solid '+e})})"&gt;Instapaper: Al azar&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;También puedes revisar &lt;a href="https://gist.github.com/flobosg/a2276c80483a4aa01740"&gt;este Gist en Github&lt;/a&gt; con el código.&lt;/p&gt;
+&lt;h2&gt;Destacar tiempos de lectura&lt;/h2&gt;
+&lt;p&gt;A diferencia de sus equivalentes móviles, la aplicación web de Instapaper no tiene ninguna opción para filtrar o reordenar los artículos de acuerdo a su duración. Cuando tengo poco tiempo para leer algo, no tengo forma alguna de identificar rápidamente los artículos más cortos. Es por ello que, de acuerdo a la duración de cada artículo, este bookmarklet colorea los tiempos de lectura con verde (0-9 min), naranja (10-19 min) o rojo (≥ 20 min).&lt;sup id="fnref:2"&gt;&lt;a class="footnote-ref" href="#fn:2" rel="footnote"&gt;2&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="/media/2014/08/instapaper.png" /&gt;&lt;/p&gt;
+&lt;p&gt;Aquí está el bookmarklet:
+&lt;a href="javascript:$('.meta_read_time').each(function(){var color;var time = $(this).text();time = time[1] === '%C2%B7' ? parseInt(time.slice(2)) : parseInt(time);if (time &amp;gt;= 20){color = 'red';} else if (time &amp;gt;= 10){color = 'orange';} else {color = &amp;quot;limegreen&amp;quot;;} $(this).css({'background-color': color, 'color': 'white', 'border': '2px solid '+color});})"&gt;Instapaper: Destacar tiempos&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;Al igual que el otro bookmarklet, éste se encuentra almacenado en &lt;a href="https://gist.github.com/flobosg/4cfabe3d0592f65ad908"&gt;un Gist en Github&lt;/a&gt; por si quieren revisarlo.&lt;/p&gt;
+&lt;p&gt;Eso es todo. Si son usuarios de Instapaper, espero que estos bookmarklets sean tan útiles para algunos de ustedes como lo son para mí. Modifíquenlos, compártanlos, cuéntenles a sus amigos.&lt;/p&gt;
+&lt;div class="footnote"&gt;
+&lt;hr /&gt;
+&lt;ol&gt;
+&lt;li id="fn:1"&gt;
+&lt;p&gt;Y de paso, aprovecho de recordar algo de Javascript y jQuery.&amp;#160;&lt;a class="footnote-backref" href="#fnref:1" rev="footnote" title="Jump back to footnote 1 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id="fn:2"&gt;
+&lt;p&gt;Esto probablemente quedaría mejor como un user script que se cargue junto con la página, pero me gusta tener la opción de activarlo cuando quiera.&amp;#160;&lt;a class="footnote-backref" href="#fnref:2" rev="footnote" title="Jump back to footnote 2 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;</summary></entry><entry><title>Tomé un MOOC</title><link href="http://franciscolobos.com//es/mooc" rel="alternate"></link><updated>2013-08-27T00:00:00+02:00</updated><author><name>Francisco Lobos</name></author><id>tag:franciscolobos.com,2013-08-27:es/mooc</id><summary type="html">&lt;p&gt;Hace unas semanas terminé el MOOC (&lt;em&gt;massive open online course&lt;/em&gt;, curso en línea masivo y abierto) &lt;a href="http://www.coursera.org/course/molevol"&gt;Computational Molecular Evolution&lt;/a&gt;, dictado en Coursera por Anders Gorm Pedersen de la Universidad Técnica de Dinamarca (DTU). Me enrolé porque buscaba reforzar ciertos conceptos relacionados con filoinformática que había visto mientras estaba en el pregrado. Es el primer curso de esta categoría que tomo y me ha dejado muy satisfecho, por lo que pensé en compartir mis impresiones:&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;A pesar de ser el primero, considero a este curso como el ejemplo de un MOOC bien ejecutado. El profesor Pedersen demostraba un buen manejo de los temas, lo que se reflejó en la claridad de las explicaciones.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;El uso de una máquina virtual con Xubuntu lo encontré una idea genial, permitiendo estandarizar los ejercicios y trabajar como los expertos lo hacen en la vida real. Lástima que uno de los programas usados (&lt;a href="http://paup.csit.fsu.edu/"&gt;PAUP&lt;/a&gt;) sea de pago, aunque existen alternativas gratis, como &lt;a href="http://www.megasoftware.net/"&gt;MEGA&lt;/a&gt; y &lt;a href="http://evolution.genetics.washington.edu/phylip.html"&gt;PHYLIP&lt;/a&gt;.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Cada quiz práctico fue concebido como un tutorial paso a paso, explicando qué hacía cada comando y su trasfondo teórico. Se notó el hecho que esos ejercicios estaban probados y pulidos con anterioridad, lo cual se agradece, ya que no tuve ninguna dificultad para seguirlos.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Me hubiese gustado que el curso cubriera más conceptos (bootstrapping, por ejemplo), aunque pienso que la selección de contenidos fue acertada y abarca de manera bastante completa el tópico de filogenética computacional.&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;La profundidad con la que se vieron los distintos temas fue la adecuada. Sin embargo, me habrían gustado recomendaciones de artículos científicos relacionados con la teoría o aplicación de cada tema expuesto. Algo de aquello se vio en la clase de reconstrucción de secuencias ancestrales.&lt;sup id="fnref:1"&gt;&lt;a class="footnote-ref" href="#fn:1" rel="footnote"&gt;1&lt;/a&gt;&lt;/sup&gt; Entiendo que tal vez no era uno de los puntos focales del curso, pero quedé con gusto a poco. Habría sido bueno conocer para qué se utiliza en la vida real la materia que pasamos en el curso. Por dar un ejemplo, no se mencionó nada acerca de cómo se aplica la filoinformática a nivel clínico y epidemiológico.&lt;sup id="fnref:2"&gt;&lt;a class="footnote-ref" href="#fn:2" rel="footnote"&gt;2&lt;/a&gt;&lt;/sup&gt; No es algo grave, aunque me hubiese agradado verlo en el curso. Llámenme exigente si quieren.&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Al momento de inscribirme temía que el curso fuese demasiado complicado o que requiriera mucho tiempo, lo que me hubiese obligado a abandonarlo. Por fortuna, esa idea jamás pasó por mi cabeza. Al contrario, cada semana estaba pegado al monitor viendo las clases, mientras conceptos que anteriormente me costaba asimilar se volvían familiares. ¡Al finalizar el último ejercicio me encontré pidiendo más, cosa que pocos cursos presenciales habían logrado! Sólo me queda agradecer al profesor Pedersen y al personal de Coursera y DTU que hicieron posible el curso, por compartir su tiempo y conocimientos.&lt;/p&gt;
+&lt;p&gt;Claramente este MOOC dejó la vara alta para los próximos cursos de este tipo que planee tomar. De hecho, ya tomé dos más, relacionados con bioestadística: &lt;a href="http://www.coursera.org/course/casebasedbiostat"&gt;Case-Based Introduction to Biostatistics&lt;/a&gt; y &lt;a href="http://www.coursera.org/course/biostats"&gt;Mathematical Biostatistics Boot Camp 1&lt;/a&gt;. Probablemente será más dífícil completarlos que Computational Molecular Evolution, pero eso es tema para otro artículo.&lt;/p&gt;
+&lt;div class="footnote"&gt;
+&lt;hr /&gt;
+&lt;ol&gt;
+&lt;li id="fn:1"&gt;
+&lt;p&gt;Incluso dando ejemplos ajenos al área biológica, como lo es la inferencia de manuscritos originales.&amp;#160;&lt;a class="footnote-backref" href="#fnref:1" rev="footnote" title="Jump back to footnote 1 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id="fn:2"&gt;
+&lt;p&gt;Se me viene a la mente &lt;a href="http://www.wired.com/wiredscience/2013/01/ff-kpc-superbug-nih/all/"&gt;este artículo&lt;/a&gt; de Carl Zimmer publicado en la revista Wired el enero pasado sobre un brote intrahospitalario de &lt;em&gt;Klebsiella pneumoniae&lt;/em&gt; resistente a carbapenemas.&amp;#160;&lt;a class="footnote-backref" href="#fnref:2" rev="footnote" title="Jump back to footnote 2 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;</summary></entry><entry><title>Una vista de presentador para Impressive</title><link href="http://franciscolobos.com//es/impressive-presenter" rel="alternate"></link><updated>2013-02-18T00:00:00+01:00</updated><author><name>Francisco Lobos</name></author><id>tag:franciscolobos.com,2013-02-18:es/impressive-presenter</id><summary type="html">&lt;p&gt;Hace un tiempo dejé de usar programas de presentación. Ahora hago mis diapositivas en &lt;abbr title=""&gt;PDF&lt;/abbr&gt; y las muestro con un lector de documentos.&lt;sup id="fnref:1"&gt;&lt;a class="footnote-ref" href="#fn:1" rel="footnote"&gt;1&lt;/a&gt;&lt;/sup&gt; Recientemente he estado probando Impressive, un programa escrito en Python que muestra presentaciones en &lt;abbr title=""&gt;PDF&lt;/abbr&gt; usando OpenGL. Tiene algunas características únicas, pero a veces una pantalla de presentador es muy útil, y por desgracia, &lt;a href="http://impressive.sourceforge.net/faq.php"&gt;Impresssive no viene con una&lt;/a&gt;:&lt;/p&gt;
+&lt;blockquote&gt;
+&lt;p&gt;As a corollary to PyGame's inability to support multiple monitors or even multiple windows, it is also not possible to have a presenter screen like OpenOffice or Keynote.&lt;/p&gt;
+&lt;/blockquote&gt;
+&lt;p&gt;Sé que hay otras alternativas, como &lt;a href="http://westhoffswelt.de/projects/pdf_presenter_console.html"&gt;pdf-presenter-console&lt;/a&gt;, el cual es bueno, pero bastante básico y carece de algunas características que me gustan de Impressive, como las transiciones y la pantalla general con todas las diapositivas. Por suerte, a Seppe vanden Broucke se le ocurrió &lt;a href="http://blog.macuyiko.com/2009/12/buillding-presenter-view-for-linux.html"&gt;una gran solución&lt;/a&gt;. Él creó una pantalla de presentador en &lt;abbr title=""&gt;HTML&lt;/abbr&gt;. Cada vez que se muestra una diapositiva, y aprovechando sus capacidades de scripting, Impressive escribe algunos datos en un objeto &lt;abbr title=""&gt;JSON&lt;/abbr&gt; almacenado en un archivo de texto plano. Este archivo se carga en la pantalla de presentador usando jQuery. Bastante ingenioso, en mi opinión.&lt;/p&gt;
+&lt;p&gt;Entonces, tomé su código, cambié algunas cosas, e hice &lt;a href="http://github.com/flobosg/impressive-presenter"&gt;impressive-presenter&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="impressive-presenter" src="/media/2013/02/impressive-presenter.png" /&gt;&lt;/p&gt;
+&lt;p&gt;Se recomienda el siguiente flujo de trabajo:&lt;/p&gt;
+&lt;ol&gt;
+&lt;li&gt;Haz tus diapositivas en &lt;abbr title=""&gt;PDF&lt;/abbr&gt; de la forma que quieras.&lt;/li&gt;
+&lt;li&gt;Ejecuta &lt;code&gt;impressive-presenter.sh&lt;/code&gt; con el archivo de presentación como argumento. Se van a crear algunos archivos en el directorio de la presentación.&lt;/li&gt;
+&lt;li&gt;&lt;a href="http://impressive.sourceforge.net/manual.php#scripts"&gt;Modifica el archivo &lt;code&gt;.info&lt;/code&gt;&lt;/a&gt; en caso de ser necesario (para las transiciones, por ejemplo). La propiedad &lt;code&gt;notes&lt;/code&gt; se muestran en la pantalla como notas del orador. Puedes ocupar &lt;abbr title=""&gt;HTML&lt;/abbr&gt;.&lt;/li&gt;
+&lt;li&gt;Al momento de dar la presentación, abre &lt;code&gt;presenter.html&lt;/code&gt; en la pantalla del notebook.&lt;sup id="fnref:2"&gt;&lt;a class="footnote-ref" href="#fn:2" rel="footnote"&gt;2&lt;/a&gt;&lt;/sup&gt;&lt;/li&gt;
+&lt;li&gt;En la pantalla principal, inicia la presentación con Impressive. Si todo va bien, &lt;code&gt;presenter.html&lt;/code&gt; debería actualizarse.&lt;/li&gt;
+&lt;/ol&gt;
+&lt;p&gt;Es una solución rápida y desprolija, pero una de las ventajas de este enfoque es que si sabes &lt;abbr title=""&gt;HTML&lt;/abbr&gt; y &lt;abbr title=""&gt;CSS&lt;/abbr&gt;, la pantalla del presentador es totalmente personalizable. De todos modos, si quieres darle una oportunidad, &lt;a href="http://github.com/flobosg/impressive-presenter"&gt;el código está disponible en GitHub&lt;/a&gt;.&lt;/p&gt;
+&lt;div class="footnote"&gt;
+&lt;hr /&gt;
+&lt;ol&gt;
+&lt;li id="fn:1"&gt;
+&lt;p&gt;Uso LibreOffice Impress para hacer las presentaciones y exportarlas a &lt;abbr title=""&gt;PDF&lt;/abbr&gt;, aunque últimamente he estado considerando cambiarme a programas de maquetación tales como InDesign o Scribus. Beamer me aburre.&amp;#160;&lt;a class="footnote-backref" href="#fnref:1" rev="footnote" title="Jump back to footnote 1 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id="fn:2"&gt;
+&lt;p&gt;En Chrome, debes ejecutar el navegador con la opción &lt;code&gt;--allow-file-access-from-files&lt;/code&gt;, sino no funcionará. La opción puede cambiar, por lo que sé cuidadoso y chequea la &lt;a href="http://peter.sh/experiments/chromium-command-line-switches/"&gt;documentación&lt;/a&gt;. O simplemente usa otra navegador.&amp;#160;&lt;a class="footnote-backref" href="#fnref:2" rev="footnote" title="Jump back to footnote 2 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;</summary></entry><entry><title>Dvorak para latinoamericanos</title><link href="http://franciscolobos.com//es/latam-dvorak" rel="alternate"></link><updated>2013-01-13T00:00:00+01:00</updated><author><name>Francisco Lobos</name></author><id>tag:franciscolobos.com,2013-01-13:es/latam-dvorak</id><summary type="html">&lt;p&gt;Uno de mis propósitos para este año es aprender a teclear en Dvorak, para comprobar si son ciertas las maravillas que cuentan de aquella distribución. ¿Mayor rapidez, mejor ergonomía, menor cantidad de errores? Con esas razones, vale la pena intentarlo.&lt;sup id="fnref:1"&gt;&lt;a class="footnote-ref" href="#fn:1" rel="footnote"&gt;1&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;p&gt;Específicamente, pretendo utilizar la variante en español, que es similar a la &lt;a href="http://en.wikipedia.org/wiki/Dvorak_Simplified_Keyboard"&gt;inglesa&lt;/a&gt;, salvo que intercambia las teclas R y H. Sin embargo, hay un pequeño detalle con respecto a las distribuciones que existen en español. &lt;/p&gt;
+&lt;p&gt;Por alguna extraña razón, las distribuciones QWERTY para el español están disponibles en dos variantes: español de España y español latinoamericano.&lt;sup id="fnref:2"&gt;&lt;a class="footnote-ref" href="#fn:2" rel="footnote"&gt;2&lt;/a&gt;&lt;/sup&gt; Sus diferencias radican en la ubicación de los símbolos y la presencia (o ausencia) de algunos de ellos. Uno de los cambios más sencillos de notar es la posición de la arroba: en el español de España se encuentra en la tecla con el número 2, mientras que la distribución latinoamericana la posee en la tecla de la letra Q. &lt;/p&gt;
+&lt;p&gt;Para mi sorpresa, en Ubuntu (o mejor dicho, en X.Org) sólo existe por defecto la versión Dvorak para el español de España. Como el teclado de mi notebook posee una distribución latinoamericana, y no pretendo memorizar la posición de cada símbolo, decidí investigar un poco y crear (con &lt;a href="http://hektor.umcs.lublin.pl/~mikosmul/computing/articles/custom-keyboard-layouts-xkb.html"&gt;algo&lt;/a&gt; de &lt;a href="http://www.charvolant.org/~doug/xkb/"&gt;ayuda&lt;/a&gt;) una variante Dvorak para el español latinoamericano, la cual he subido a &lt;a href="http://github.com/flobosg/latam-dvorak"&gt;este repositorio en Github&lt;/a&gt;.&lt;/p&gt;
+&lt;p&gt;&lt;img alt="Distribución latam-dvorak" src="/media/2013/01/latam-dvorak.png" /&gt;&lt;/p&gt;
+&lt;p&gt;En resumen, si usas un teclado en español, eres fan de Dvorak, pero no así de la cedilla ni del símbolo del euro, y odias que aparezca un acento grave (`) cuando quieres teclear una tilde (´), échale un vistazo.&lt;/p&gt;
+&lt;div class="footnote"&gt;
+&lt;hr /&gt;
+&lt;ol&gt;
+&lt;li id="fn:1"&gt;
+&lt;p&gt;Aunque les recomiendo probar en un momento en el que no tengan que escribir algo importante (como un proyecto de tesis).&amp;#160;&lt;a class="footnote-backref" href="#fnref:1" rev="footnote" title="Jump back to footnote 1 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li id="fn:2"&gt;
+&lt;p&gt;Español de España también es conocida como Español o Spanish (International sort).&amp;#160;&lt;a class="footnote-backref" href="#fnref:2" rev="footnote" title="Jump back to footnote 2 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;</summary></entry></feed>

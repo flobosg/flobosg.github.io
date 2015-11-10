@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<head>
+<title>Biopedigree</title>
+<meta charset="utf-8">
+<style>
+
+html {
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+}
+
+h1 {
+  font-size: 48px;
+  font-weight: 300;
+  letter-spacing: -2px;
+}
+
+a, a:hover, a:active, a:visited {
+  color: #a00;
+}
+
+.name {
+  font-weight: bold;
+}
+
+.year {
+  fill: #777;
+  font-size: smaller;
+}
+
+.link {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+footer {
+  margin-top: 1em;
+}
+
+</style>
+<script type="text/javascript">
+    var _gaq = _gaq || [];
+    _gaq.push(['_setAccount', 'UA-34068626-1']);
+    _gaq.push(['_trackPageview']);
+
+    (function() {
+    var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+    ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+    })();
+</script>
+</head>
+<body>
+<h1>Biopedigree</h1>
+<p>Una genealogía de los apadrinamientos ocurridos entre 2004-2013 en la carrera de Bioingeniería de la Universidad de Concepción, Chile.</p>
+<script src="http://d3js.org/d3.v2.min.js?2.9.4"></script>
+<script>
+
+var margin = {top: 0, right: 0, bottom: 0, left: -175},
+    width = 2100 - margin.left - margin.right,
+    height = 5000 - margin.top - margin.bottom;
+
+var tree = d3.layout.tree()
+    .separation(function(a, b) { return a.parent === b.parent ? 1 : 1; })
+    // .children(function(d) { return d.parents; })
+    .size([height, width-300]);
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+d3.json("padrinos.json", function(root) {
+  var nodes = tree.nodes(root);
+
+  var link = svg.selectAll(".link")
+      .data(tree.links(nodes))
+    .enter().append("path")
+      .attr("display", function(d) { return d.source.depth ? null : "none"; }) // hide root links
+      .attr("class", "link")
+      .attr("d", elbow);
+
+  var node = svg.selectAll(".node")
+      .data(nodes)
+    .enter().append("g")
+      .attr("display", function(d) { return d.depth === false || d.name[0] !== "!" ? null : "none"; }) // hide root node
+      .attr("class", "node")
+      // .attr("transform", function(d) { return "translate(" + d.y + "," + d.x + ")"; });
+      .attr("transform", function(d) { return "translate(" + 187.5*(Number(d.year)-2003) + "," + d.x + ")"; });
+
+  node.append("text")
+      .attr("class", "name")
+      .attr("x", 8)
+      .attr("y", -6)
+      .text(function(d) { return d.name[0] !== "~" ? d.name : "¿?"; });
+
+  node.append("text")
+      .attr("x", 8)
+      .attr("y", 8)
+      .attr("dy", ".71em")
+      .attr("class", "year")
+      .text(function(d) { return d.year; });
+
+  // node.append("text")
+  //     .attr("x", 8)
+  //     .attr("y", 8)
+  //     .attr("dy", "1.86em")
+  //     .attr("class", "about location")
+  //     .text(function(d) { return d.location; });
+});
+
+function elbow(d, i) {
+  return "M" + (187.5*(Number(d.source.year)-2003)) + "," + d.source.x
+       + "H" + (187.5*(Number(d.target.year)-2003)) + "V" + d.target.x
+       + "h" + 150;
+  // return "M" + d.source.y + "," + d.source.x
+  //      + "H" + d.target.y + "V" + d.target.x
+  //      + "h" + 150;
+}
+
+</script>
+<footer>
+<p><a href="https://docs.google.com/spreadsheet/ccc?key=0AmtF61A1XarmdHdFQmxCT2VVbFNMdnFCSnp2aXBuTlE&usp=sharing">Datos originales</a>.  Hecho por Francisco Lobos, con la ayuda de <a href="http://d3js.org/">D3</a> y unas cuantas cervezas. Y ustedes, por supuesto.</p>
+<p>Última actualización: 14-04-2014.</p>
+</footer>
+</body>

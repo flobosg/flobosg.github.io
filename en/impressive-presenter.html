@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>A presenter screen for Impressive</title>
+        <link href="/main.css" rel="stylesheet">
+        <meta name="viewport" content="width=device-width">
+    </head>
+    <body>
+        <div id="container">
+<header>
+	<section class="name"><a href="/">Francisco Lobos</a></section>
+	<nav>
+		<ul>
+			<li><a href="/en">Posts</a></li>
+			<li><a href="/en/about">About</a></li>
+		</ul>
+	</nav>
+</header>    <section id="content">
+        <article>
+            <time datetime="2013-02-18T00:00:00+01:00">February 18, 2013</time>
+        <a href="/es/impressive-presenter" class="translation">leer en español</a>
+        <h1>A presenter screen for Impressive</h1>
+            <p>I ditched presentation software a while ago. Now I make my slides in <abbr title="">PDF</abbr> and show them with a document reader.<sup id="fnref:1"><a class="footnote-ref" href="#fn:1" rel="footnote">1</a></sup> Recently I've been checking out Impressive, a program written in Python that displays <abbr title="">PDF</abbr> presentation slides using OpenGL. It contains some unique features, but sometimes a presenter screen comes in handy, and sadly, <a href="http://impressive.sourceforge.net/faq.php">Impressive doesn't come with one</a>:</p>
+<blockquote>
+<p>As a corollary to PyGame's inability to support multiple monitors or even multiple windows, it is also not possible to have a presenter screen like OpenOffice or Keynote.</p>
+</blockquote>
+<p>I know there are alternatives, such as <a href="http://westhoffswelt.de/projects/pdf_presenter_console.html">pdf-presenter-console</a>, which is good, but rather basic and lacks some features I like from Impressive, such as transitions and the overview screen. Luckily, Seppe vanden Broucke came up with <a href="http://blog.macuyiko.com/2009/12/buillding-presenter-view-for-linux.html">a great solution</a>. He built a presenter screen in <abbr title="">HTML</abbr>. Every time a slide is shown, and taking advantage of its scripting capabilities, Impressive writes some information to a <abbr title="">JSON</abbr> object stored in a plain text file. Then this file is loaded in the presenter screen using jQuery. Pretty neat, in my opinion.</p>
+<p>So, I took his code, changed some stuff, and made <a href="http://github.com/flobosg/impressive-presenter">impressive-presenter</a>.</p>
+<p><img alt="impressive-presenter" src="/media/2013/02/impressive-presenter.png" /></p>
+<p>This workflow is recommended:</p>
+<ol>
+<li>Make your <abbr title="">PDF</abbr> slides however you like.</li>
+<li>Run <code>impressive-presenter.sh</code> with your presentation file as an argument. It will create some files in the presentation directory.</li>
+<li><a href="http://impressive.sourceforge.net/manual.php#scripts">Modify the <code>.info</code> file</a> if you need to (for transitions, for example). The <code>notes</code> property will be shown on the presenter screen as speaker notes. <abbr title="">HTML</abbr> is allowed.</li>
+<li>At the time of your presentation, open <code>presenter.html</code> in your laptop screen.<sup id="fnref:2"><a class="footnote-ref" href="#fn:2" rel="footnote">2</a></sup></li>
+<li>In the main screen, start your presentation with Impressive. If everything goes well, <code>presenter.html</code> should update its info.</li>
+</ol>
+<p>It's a quick and dirty solution, but one advantage of this approach is that if you know <abbr title="">HTML</abbr> and <abbr title="">CSS</abbr>, the presenter screen is fully customizable. Anyway, if you want to give it a shot, <a href="http://github.com/flobosg/impressive-presenter">the code is available at GitHub</a>.</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:1">
+<p>I use LibreOffice Impress to make the presentations and export them to <abbr title="">PDF</abbr>, but I'm considering the switch to desktop publishing software like InDesign or Scribus. Beamer bores the hell out of me.&#160;<a class="footnote-backref" href="#fnref:1" rev="footnote" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:2">
+<p>In Chrome, you'll need to execute the browser with the <code>--allow-file-access-from-files</code> flag, otherwise it won't work. This flag could change without notice, so be careful and check the <a href="http://peter.sh/experiments/chromium-command-line-switches/">documentation</a>. Or just use another browser.&#160;<a class="footnote-backref" href="#fnref:2" rev="footnote" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+        </article>
+            <footer>
+                <!-- <p>&copy; 2012 Francisco Lobos. All rights reserved.</p> -->
+                <p>
+                    Do you have something to say? <a href="/en/about#contact">Contact me</a>.
+                </p>
+            </footer>
+        </div>
+    </body>
+</html>
