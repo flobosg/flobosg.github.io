@@ -93,8 +93,6 @@
 &lt;/li&gt;
 &lt;/ol&gt;
 &lt;p&gt;Con lo que se obtienen las siguientes imágenes:&lt;/p&gt;
-&lt;!-- &lt;img src="/media/2014/12/layers.jpg" class="fullwidth"&gt; --&gt;
-
 &lt;p&gt;&lt;img alt="" src="/media/img/goodsell/layers.jpg" /&gt;&lt;/p&gt;
 &lt;p&gt;Estas deben ser abiertas como capas en Photoshop, GIMP, etc. y procesadas de la siguiente manera:&lt;/p&gt;
 &lt;ol&gt;
@@ -109,11 +107,6 @@
 &lt;p&gt;Como pueden ver, esta estructura contiene un arreglo muy ordenado de treoninas, encargadas de coordinar moléculas de agua, logrando detener el crecimiento de los cristales de hielo que crecen en el ambiente celular.&lt;/p&gt;
 &lt;h2&gt;Más información&lt;/h2&gt;
 &lt;p&gt;Si quieren ver más sobre la obra de David Goodsell, revisen &lt;a href="http://mgl.scripps.edu/people/goodsell"&gt;su página web&lt;/a&gt;, la sección &lt;a href="http://www.rcsb.org/pdb/101/motm_archive.do"&gt;Molecule of the Month&lt;/a&gt; en el PDB, o su libro &lt;a href="http://mgl.scripps.edu/people/goodsell/books/MoL2-preview.html"&gt;The Machinery of Life&lt;/a&gt;, el cual contiene varias de sus ilustraciones.&lt;/p&gt;
-&lt;!-- 
-[^3]: Richardson, J. S. (1981) The Anatomy and Taxonomy of Protein Structure. *Advances in Protein Chemistry* 34, 167-339. Disponible [aquí][richardson81]. --&gt;
-
-&lt;!-- [^5]: `fog_start` acepta valores entre 0 y 1. Por defecto es igual a 0.45. --&gt;
-
 &lt;div class="footnote"&gt;
 &lt;hr /&gt;
 &lt;ol&gt;
@@ -129,9 +122,7 @@ Actualmente Goodsell utiliza en la mayoría de las ocasiones colores arbitrarios
 &lt;p&gt;El parámetro &lt;code&gt;ambient&lt;/code&gt; controla la cantidad de luz ambiente en la escena. Acepta valores entre 0 y 1, y por defecto es igual a 0.1.&amp;#160;&lt;a class="footnote-backref" href="#fnref:3" rev="footnote" title="Jump back to footnote 3 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;li id="fn:4"&gt;
-&lt;p&gt;A grandes rasgos, el &lt;a href="https://en.wikipedia.org/wiki/Z-buffering"&gt;z-buffer&lt;/a&gt; es una representación de la profundidad a la que se encuentran los objetos de una escena.
-&lt;!--       En el z-buffer mostrado en la imagen de abajo (&lt;a href="https://en.wikipedia.org/wiki/Z-buffering"&gt;original&lt;/a&gt;), mientras más blanco, mayor cercanía a la cámara.--&gt;&lt;/p&gt;
-&lt;p&gt;&lt;!-- &lt;img src="/media/2013/04/z-buffer.png" style="width:25%;"&gt; --&gt;&amp;#160;&lt;a class="footnote-backref" href="#fnref:4" rev="footnote" title="Jump back to footnote 4 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;A grandes rasgos, el &lt;a href="https://en.wikipedia.org/wiki/Z-buffering"&gt;z-buffer&lt;/a&gt; es una representación de la profundidad a la que se encuentran los objetos de una escena.&amp;#160;&lt;a class="footnote-backref" href="#fnref:4" rev="footnote" title="Jump back to footnote 4 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
 &lt;/div&gt;</summary></entry><entry><title>Dos bookmarklets para Instapaper</title><link href="http://franciscolobos.com//es/bookmarklets-instapaper" rel="alternate"></link><updated>2014-08-16T01:36:00+02:00</updated><author><name>Francisco Lobos</name></author><id>tag:franciscolobos.com,2014-08-16:es/bookmarklets-instapaper</id><summary type="html">&lt;p&gt;Cuando era niño, leía todo lo que se me cruzaba por delante: libros, revistas, diarios, etc. Eso no ha cambiado mucho, salvo que ahora lo que leo principalmente son artículos en internet. Aquí es donde entra &lt;a href="https://www.instapaper.com/"&gt;Instapaper&lt;/a&gt;, el cual me ayuda a guardar cosas que no puedo revisar de inmediato, para luego leerlas cuando tenga más tiempo.
