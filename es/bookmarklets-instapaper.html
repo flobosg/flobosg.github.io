@@ -35,7 +35,7 @@ Dependiendo de la ubicación en que estés cuando haces click en él, este bookm
 <p>También puedes revisar <a href="https://gist.github.com/flobosg/a2276c80483a4aa01740">este Gist en Github</a> con el código.</p>
 <h2>Destacar tiempos de lectura</h2>
 <p>A diferencia de sus equivalentes móviles, la aplicación web de Instapaper no tiene ninguna opción para filtrar o reordenar los artículos de acuerdo a su duración. Cuando tengo poco tiempo para leer algo, no tengo forma alguna de identificar rápidamente los artículos más cortos. Es por ello que, de acuerdo a la duración de cada artículo, este bookmarklet colorea los tiempos de lectura con verde (0-9 min), naranja (10-19 min) o rojo (≥ 20 min).<sup id="fnref:2"><a class="footnote-ref" href="#fn:2" rel="footnote">2</a></sup></p>
-<p><img alt="" src="/media/2014/08/instapaper.png" /></p>
+<p><img alt="" src="/media/img/instapaper.png" /></p>
 <p>Aquí está el bookmarklet:
 <a href="javascript:$('.meta_read_time').each(function(){var color;var time = $(this).text();time = time[1] === '%C2%B7' ? parseInt(time.slice(2)) : parseInt(time);if (time &gt;= 20){color = 'red';} else if (time &gt;= 10){color = 'orange';} else {color = &quot;limegreen&quot;;} $(this).css({'background-color': color, 'color': 'white', 'border': '2px solid '+color});})">Instapaper: Destacar tiempos</a></p>
 <p>Al igual que el otro bookmarklet, éste se encuentra almacenado en <a href="https://gist.github.com/flobosg/4cfabe3d0592f65ad908">un Gist en Github</a> por si quieren revisarlo.</p>

@@ -11,7 +11,7 @@
 &lt;p&gt;You can also check the code in &lt;a href="https://gist.github.com/flobosg/a2276c80483a4aa01740"&gt;this Github Gist&lt;/a&gt;.&lt;/p&gt;
 &lt;h2&gt;Highlight reading times&lt;/h2&gt;
 &lt;p&gt;Unlike their mobile equivalents, the Instapaper web app has no option to filter o sort articles according to their duration. When I have little time to read something, there is no quick way to identify short articles. That&amp;rsquo;s why, according to each article&amp;rsquo;s duration, this bookmarklet colors reading times green (0-9 min), orange (10-19 min) or red (≥ 20 min).&lt;sup id="fnref:2"&gt;&lt;a class="footnote-ref" href="#fn:2" rel="footnote"&gt;2&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
-&lt;p&gt;&lt;img alt="" src="/media/2014/08/instapaper.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="" src="/media/img/instapaper.png" /&gt;&lt;/p&gt;
 &lt;p&gt;Here is the bookmarklet:
 &lt;a href="javascript:$('.meta_read_time').each(function(){var color;var time = $(this).text();time = time[1] === '%C2%B7' ? parseInt(time.slice(2)) : parseInt(time);if (time &amp;gt;= 20){color = 'red';} else if (time &amp;gt;= 10){color = 'orange';} else {color = &amp;quot;limegreen&amp;quot;;} $(this).css({'background-color': color, 'color': 'white', 'border': '2px solid '+color});})"&gt;Instapaper: Highlight times&lt;/a&gt;&lt;/p&gt;
 &lt;p&gt;Like the other bookmarklet, this one is stored as &lt;a href="https://gist.github.com/flobosg/4cfabe3d0592f65ad908"&gt;a Github Gist&lt;/a&gt; if you want to check it out.&lt;/p&gt;
@@ -62,7 +62,7 @@
 &lt;/blockquote&gt;
 &lt;p&gt;I know there are alternatives, such as &lt;a href="http://westhoffswelt.de/projects/pdf_presenter_console.html"&gt;pdf-presenter-console&lt;/a&gt;, which is good, but rather basic and lacks some features I like from Impressive, such as transitions and the overview screen. Luckily, Seppe vanden Broucke came up with &lt;a href="http://blog.macuyiko.com/2009/12/buillding-presenter-view-for-linux.html"&gt;a great solution&lt;/a&gt;. He built a presenter screen in &lt;abbr title=""&gt;HTML&lt;/abbr&gt;. Every time a slide is shown, and taking advantage of its scripting capabilities, Impressive writes some information to a &lt;abbr title=""&gt;JSON&lt;/abbr&gt; object stored in a plain text file. Then this file is loaded in the presenter screen using jQuery. Pretty neat, in my opinion.&lt;/p&gt;
 &lt;p&gt;So, I took his code, changed some stuff, and made &lt;a href="http://github.com/flobosg/impressive-presenter"&gt;impressive-presenter&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;img alt="impressive-presenter" src="/media/2013/02/impressive-presenter.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="impressive-presenter" src="/media/img/impressive-presenter.png" /&gt;&lt;/p&gt;
 &lt;p&gt;This workflow is recommended:&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;Make your &lt;abbr title=""&gt;PDF&lt;/abbr&gt; slides however you like.&lt;/li&gt;
@@ -86,7 +86,7 @@
 &lt;p&gt;Specifically, I intend to use the Spanish variant, which is similar to the &lt;a href="http://en.wikipedia.org/wiki/Dvorak_Simplified_Keyboard"&gt;English one&lt;/a&gt;, except that the R and H keys are swapped. However, there is a small detail regarding Spanish keyboard layouts.&lt;/p&gt;
 &lt;p&gt;For some strange reason, QWERTY layouts for Spanish are available in two variants: Spanish and Latin American Spanish.&lt;sup id="fnref:2"&gt;&lt;a class="footnote-ref" href="#fn:2" rel="footnote"&gt;2&lt;/a&gt;&lt;/sup&gt; Their differences lie in the location of the symbols and the presence (or absence) of some of them. One of the simplest changes you may notice is the position of the at sign (@): in Spanish is is located on the key with the number 2, while the Latin American layout has it on the key for the letter Q.&lt;/p&gt;
 &lt;p&gt;To my surprise, Ubuntu (or rather, X.Org) only has a Dvorak layout for Spanish. As the keyboard of my notebook has a Latin American layout, and I don&amp;rsquo;t intend to memorize the position of each symbol, I decided to do some research and create (with &lt;a href="http://hektor.umcs.lublin.pl/~mikosmul/computing/articles/custom-keyboard-layouts-xkb.html"&gt;some&lt;/a&gt; &lt;a href="http://www.charvolant.org/~doug/xkb/"&gt;help&lt;/a&gt;) a Dvorak variant for Latin American Spanish, which I uploaded to &lt;a href="http://github.com/flobosg/latam-dvorak"&gt;this repository on Github&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;img alt="latam-dvorak layout" src="/media/2013/01/latam-dvorak.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="latam-dvorak layout" src="/media/img/latam-dvorak.png" /&gt;&lt;/p&gt;
 &lt;p&gt;So, if you use a Spanish keyboard, you&amp;rsquo;re a fan of Dvorak, but not of the cedilla (ç) or the euro symbol (€), and you hate to see a grave accent (`) when you want to type an acute one (´), check it out.&lt;/p&gt;
 &lt;div class="footnote"&gt;
 &lt;hr /&gt;
