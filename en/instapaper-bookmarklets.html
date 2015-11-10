@@ -33,7 +33,7 @@
 <p>You can also check the code in <a href="https://gist.github.com/flobosg/a2276c80483a4aa01740">this Github Gist</a>.</p>
 <h2>Highlight reading times</h2>
 <p>Unlike their mobile equivalents, the Instapaper web app has no option to filter o sort articles according to their duration. When I have little time to read something, there is no quick way to identify short articles. That&rsquo;s why, according to each article&rsquo;s duration, this bookmarklet colors reading times green (0-9 min), orange (10-19 min) or red (≥ 20 min).<sup id="fnref:2"><a class="footnote-ref" href="#fn:2" rel="footnote">2</a></sup></p>
-<p><img alt="" src="/media/2014/08/instapaper.png" /></p>
+<p><img alt="" src="/media/img/instapaper.png" /></p>
 <p>Here is the bookmarklet:
 <a href="javascript:$('.meta_read_time').each(function(){var color;var time = $(this).text();time = time[1] === '%C2%B7' ? parseInt(time.slice(2)) : parseInt(time);if (time &gt;= 20){color = 'red';} else if (time &gt;= 10){color = 'orange';} else {color = &quot;limegreen&quot;;} $(this).css({'background-color': color, 'color': 'white', 'border': '2px solid '+color});})">Instapaper: Highlight times</a></p>
 <p>Like the other bookmarklet, this one is stored as <a href="https://gist.github.com/flobosg/4cfabe3d0592f65ad908">a Github Gist</a> if you want to check it out.</p>
