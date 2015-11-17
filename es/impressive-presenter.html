@@ -4,6 +4,7 @@
         <meta charset="UTF-8">
         <title>Una vista de presentador para Impressive</title>
         <link href="/main.css" rel="stylesheet">
+        <link href="/fonts.css" rel="stylesheet">
         <meta name="viewport" content="width=device-width">
     </head>
     <body>
@@ -18,16 +19,16 @@
 	</nav>
 </header>    <section id="content">
         <article>
+            <a href="/en/impressive-presenter" class="translation">English version: A presenter screen for Impressive</a>
             <time datetime="2013-02-18T00:00:00+01:00">18 de febrero del 2013</time>
-        <a href="/en/impressive-presenter" class="translation">read in English</a>
-        <h1>Una vista de presentador para Impressive</h1>
+            <h1>Una vista de presentador para Impressive</h1>
             <p>Hace un tiempo dejé de usar programas de presentación. Ahora hago mis diapositivas en <abbr title="">PDF</abbr> y las muestro con un lector de documentos.<sup id="fnref:1"><a class="footnote-ref" href="#fn:1" rel="footnote">1</a></sup> Recientemente he estado probando Impressive, un programa escrito en Python que muestra presentaciones en <abbr title="">PDF</abbr> usando OpenGL. Tiene algunas características únicas, pero a veces una pantalla de presentador es muy útil, y por desgracia, <a href="http://impressive.sourceforge.net/faq.php">Impresssive no viene con una</a>:</p>
 <blockquote>
 <p>As a corollary to PyGame&rsquo;s inability to support multiple monitors or even multiple windows, it is also not possible to have a presenter screen like OpenOffice or Keynote.</p>
 </blockquote>
 <p>Sé que hay otras alternativas, como <a href="http://westhoffswelt.de/projects/pdf_presenter_console.html">pdf-presenter-console</a>, el cual es bueno, pero bastante básico y carece de algunas características que me gustan de Impressive, como las transiciones y la pantalla general con todas las diapositivas. Por suerte, a Seppe vanden Broucke se le ocurrió <a href="http://blog.macuyiko.com/2009/12/buillding-presenter-view-for-linux.html">una gran solución</a>. Él creó una pantalla de presentador en <abbr title="">HTML</abbr>. Cada vez que se muestra una diapositiva, y aprovechando sus capacidades de scripting, Impressive escribe algunos datos en un objeto <abbr title="">JSON</abbr> almacenado en un archivo de texto plano. Este archivo se carga en la pantalla de presentador usando jQuery. Bastante ingenioso, en mi opinión.</p>
 <p>Entonces, tomé su código, cambié algunas cosas, e hice <a href="http://github.com/flobosg/impressive-presenter">impressive-presenter</a>.</p>
-<p><img alt="impressive-presenter" src="/media/img/impressive-presenter.png" /></p>
+<p><img alt="impressive-presenter" src="/media/2013/02/impressive-presenter.png" /></p>
 <p>Se recomienda el siguiente flujo de trabajo:</p>
 <ol>
 <li>Haz tus diapositivas en <abbr title="">PDF</abbr> de la forma que quieras.</li>
@@ -50,7 +51,6 @@
 </div>
         </article>
             <footer>
-                <!-- <p>&copy; 2012 Francisco Lobos. All rights reserved.</p> -->
                 <p>
                     ¿Tienes algo que decir? <a href="/es/acerca-de#contacto">Contáctame</a>.
                 </p>

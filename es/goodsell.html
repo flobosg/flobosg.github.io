@@ -4,6 +4,7 @@
         <meta charset="UTF-8">
         <title>Aplicando ingeniería reversa a David Goodsell</title>
         <link href="/main.css" rel="stylesheet">
+        <link href="/fonts.css" rel="stylesheet">
         <meta name="viewport" content="width=device-width">
     </head>
     <body>
@@ -19,13 +20,13 @@
 </header>    <section id="content">
         <article>
             <time datetime="2015-11-10T00:53:10+01:00">10 de noviembre del 2015</time>
-        <h1>Aplicando ingeniería reversa a David Goodsell</h1>
+            <h1>Aplicando ingeniería reversa a David Goodsell</h1>
             <h2>Introducción</h2>
 <p>Desde hace un tiempo que estoy interesado en la relación existente entre el arte y la biología estructural. En especial, me atraen las diversas formas de representar las estructuras tridimensionales de las macromoléculas biológicas, ya sea mediante gráficos computacionales, animaciones o modelos físicos tangibles.</p>
-<p>Al igual que mucha gente, me gusta el estilo con que David Goodsell ilustra las estructuras de la sección <a href="http://www.rcsb.org/pdb/101/motm_archive.do">Molecule of the Month</a> (MotM) en el Protein Data Bank. Sin embargo, reproducir su aspecto es más complicado de lo que parece. Para generar las figuras de MotM, <a href="http://www.rcsb.org/pdb/static.do?p=education_discussion/molecule_of_the_month/about.html">Goodsell usa software personalizado</a> (aparentemente en Fortran, según <a href="http://www.scilogs.de/detritus/david-goodsell-molek-l-k-nstler-und-wissenschaftler/">este link en alemán</a>). Existen varios tutoriales y herramientas en Internet para emular su apariencia<sup id="fnref:1"><a class="footnote-ref" href="#fn:1" rel="footnote">1</a></sup>, pero ninguno de esos procedimientos me convence totalmente. Sin embargo, tomé algunas ideas de ellos y logré elaborar dos métodos en PyMOL: uno más sencillo y otro más complejo. Al principio solo quería averiguar cómo hacer figuras con el estilo de Goodsell, pero finalmente se transformó en una suerte de obsesión. Espero que les sea útil.</p>
-<h2>Una manera fácil usando PyMOL</h2>
+<p>Al igual que mucha gente, me gusta el estilo único con que David Goodsell ilustra las estructuras de la sección <a href="http://www.rcsb.org/pdb/101/motm_archive.do">Molecule of the Month</a> (MotM) en el Protein Data Bank. Sin embargo, reproducir su aspecto es más complicado de lo que parece. Para generar las figuras de MotM, <a href="http://www.rcsb.org/pdb/static.do?p=education_discussion/molecule_of_the_month/about.html">Goodsell usa software personalizado</a> (aparentemente en Fortran, según <a href="http://www.scilogs.de/detritus/david-goodsell-molek-l-k-nstler-und-wissenschaftler/">este link en alemán</a>). Existen varios tutoriales y herramientas en Internet para emular su apariencia<sup id="fnref:1"><a class="footnote-ref" href="#fn:1" rel="footnote">1</a></sup>, pero ninguno de esos procedimientos me convence totalmente. Sin embargo, tomé algunas ideas de ellos y logré elaborar dos métodos usando PyMOL. Al principio solo quería averiguar cómo hacer figuras con el estilo de Goodsell, pero finalmente se transformó en una suerte de obsesión. Espero que les sea útil.</p>
+<h2>Una manera fácil usando solo PyMOL</h2>
 <p>Para empezar, voy a reproducir la figura que aparece en la <a href="http://www.rcsb.org/pdb/101/motm.do?momID=9">entrada de MoTM del mes de septiembre del año 2000</a>, correspondiente a la lisozima de clara de huevo de gallina (PDB ID: <a href="http://www.rcsb.org/pdb/explore.do?structureId=2LYZ">2LYZ</a>).</p>
-<p>Primero hay que cargar la estructura de 2LYZ (por ejemplo usando <code>fetch 2lyz</code>), para luego remover las aguas con <code>remove solvent</code>, mostrar la proteína como esferas usando <code>show spheres</code>, poner un fondo blanco con <code>bg_color white</code> y coloreando por elemento de acuerdo a su esquema clásico (carbonos blancos, nitrógenos y oxígenos en tonos azulados y rojizos, respectivamente):<sup id="fnref:2"><a class="footnote-ref" href="#fn:2" rel="footnote">2</a></sup></p>
+<p>Primero hay que cargar la estructura de 2LYZ (por ejemplo usando <code>fetch 2lyz</code>), para luego remover las aguas con <code>remove solvent</code>, mostrar la proteína como esferas usando <code>show spheres</code>, poner un fondo blanco con <code>bg_color white</code> y coloreando por elemento de acuerdo a su esquema clásico (carbonos blancos, nitrógenos, oxígenos y azufres en tonos azulados, rojizos y amarillentos, respectivamente):<sup id="fnref:2"><a class="footnote-ref" href="#fn:2" rel="footnote">2</a></sup></p>
 <pre><code>color white
 color lightblue, name N*
 color blue, resn ARG+LYS and sidechain and name N*
@@ -34,15 +35,14 @@ color red, resn GLU+ASP and sidechain and name O*
 color sulfur, name S*
 </code></pre>
 <p>Una vez terminada la preparación de la escena, una forma sencilla de obtener la figura es utilizando estos comandos:</p>
-<pre><code>bg_color white
-unset specular
+<pre><code>unset specular
 unset depth_cue
 set ambient, 0.6
 set ray_trace_mode, 1
 set ray_trace_depth_factor, 1
 set ray_trace_disco_factor, 1
 </code></pre>
-<p>Luego de ejecutar el comando <code>ray</code>, debería aparecer algo similar a esto:</p>
+<p>Luego de renderizar mediante el comando <code>ray</code>, debería aparecer algo similar a esto:</p>
 <p><img alt="" src="/media/img/goodsell/2lyz.png" /></p>
 <p>Es posible que sea necesario ajustar el parámetro <code>ambient</code> para evitar la aparición del sombreado en las esferas.<sup id="fnref:3"><a class="footnote-ref" href="#fn:3" rel="footnote">3</a></sup> Además, dependiendo del tamaño de la renderización quizás haya que modificar el valor de <code>ray_trace_gain</code> para alterar el grosor de los bordes.</p>
 <h2>Una manera más complicada</h2>
@@ -135,7 +135,6 @@ Actualmente Goodsell utiliza en la mayoría de las ocasiones colores arbitrarios
 </div>
         </article>
             <footer>
-                <!-- <p>&copy; 2012 Francisco Lobos. All rights reserved.</p> -->
                 <p>
                     ¿Tienes algo que decir? <a href="/es/acerca-de#contacto">Contáctame</a>.
                 </p>

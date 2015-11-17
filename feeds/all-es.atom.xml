@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <feed xmlns="http://www.w3.org/2005/Atom"><title>Francisco Lobos</title><link href="http://franciscolobos.com/" rel="alternate"></link><link href="http://franciscolobos.com/feeds/all-es.atom.xml" rel="self"></link><id>http://franciscolobos.com/</id><updated>2015-11-10T00:53:10+01:00</updated><entry><title>Aplicando ingeniería reversa a David Goodsell</title><link href="http://franciscolobos.com//es/goodsell" rel="alternate"></link><updated>2015-11-10T00:53:10+01:00</updated><author><name>Francisco Lobos</name></author><id>tag:franciscolobos.com,2015-11-10:es/goodsell</id><summary type="html">&lt;h2&gt;Introducción&lt;/h2&gt;
 &lt;p&gt;Desde hace un tiempo que estoy interesado en la relación existente entre el arte y la biología estructural. En especial, me atraen las diversas formas de representar las estructuras tridimensionales de las macromoléculas biológicas, ya sea mediante gráficos computacionales, animaciones o modelos físicos tangibles.&lt;/p&gt;
-&lt;p&gt;Al igual que mucha gente, me gusta el estilo con que David Goodsell ilustra las estructuras de la sección &lt;a href="http://www.rcsb.org/pdb/101/motm_archive.do"&gt;Molecule of the Month&lt;/a&gt; (MotM) en el Protein Data Bank. Sin embargo, reproducir su aspecto es más complicado de lo que parece. Para generar las figuras de MotM, &lt;a href="http://www.rcsb.org/pdb/static.do?p=education_discussion/molecule_of_the_month/about.html"&gt;Goodsell usa software personalizado&lt;/a&gt; (aparentemente en Fortran, según &lt;a href="http://www.scilogs.de/detritus/david-goodsell-molek-l-k-nstler-und-wissenschaftler/"&gt;este link en alemán&lt;/a&gt;). Existen varios tutoriales y herramientas en Internet para emular su apariencia&lt;sup id="fnref:1"&gt;&lt;a class="footnote-ref" href="#fn:1" rel="footnote"&gt;1&lt;/a&gt;&lt;/sup&gt;, pero ninguno de esos procedimientos me convence totalmente. Sin embargo, tomé algunas ideas de ellos y logré elaborar dos métodos en PyMOL: uno más sencillo y otro más complejo. Al principio solo quería averiguar cómo hacer figuras con el estilo de Goodsell, pero finalmente se transformó en una suerte de obsesión. Espero que les sea útil.&lt;/p&gt;
-&lt;h2&gt;Una manera fácil usando PyMOL&lt;/h2&gt;
+&lt;p&gt;Al igual que mucha gente, me gusta el estilo único con que David Goodsell ilustra las estructuras de la sección &lt;a href="http://www.rcsb.org/pdb/101/motm_archive.do"&gt;Molecule of the Month&lt;/a&gt; (MotM) en el Protein Data Bank. Sin embargo, reproducir su aspecto es más complicado de lo que parece. Para generar las figuras de MotM, &lt;a href="http://www.rcsb.org/pdb/static.do?p=education_discussion/molecule_of_the_month/about.html"&gt;Goodsell usa software personalizado&lt;/a&gt; (aparentemente en Fortran, según &lt;a href="http://www.scilogs.de/detritus/david-goodsell-molek-l-k-nstler-und-wissenschaftler/"&gt;este link en alemán&lt;/a&gt;). Existen varios tutoriales y herramientas en Internet para emular su apariencia&lt;sup id="fnref:1"&gt;&lt;a class="footnote-ref" href="#fn:1" rel="footnote"&gt;1&lt;/a&gt;&lt;/sup&gt;, pero ninguno de esos procedimientos me convence totalmente. Sin embargo, tomé algunas ideas de ellos y logré elaborar dos métodos usando PyMOL. Al principio solo quería averiguar cómo hacer figuras con el estilo de Goodsell, pero finalmente se transformó en una suerte de obsesión. Espero que les sea útil.&lt;/p&gt;
+&lt;h2&gt;Una manera fácil usando solo PyMOL&lt;/h2&gt;
 &lt;p&gt;Para empezar, voy a reproducir la figura que aparece en la &lt;a href="http://www.rcsb.org/pdb/101/motm.do?momID=9"&gt;entrada de MoTM del mes de septiembre del año 2000&lt;/a&gt;, correspondiente a la lisozima de clara de huevo de gallina (PDB ID: &lt;a href="http://www.rcsb.org/pdb/explore.do?structureId=2LYZ"&gt;2LYZ&lt;/a&gt;).&lt;/p&gt;
-&lt;p&gt;Primero hay que cargar la estructura de 2LYZ (por ejemplo usando &lt;code&gt;fetch 2lyz&lt;/code&gt;), para luego remover las aguas con &lt;code&gt;remove solvent&lt;/code&gt;, mostrar la proteína como esferas usando &lt;code&gt;show spheres&lt;/code&gt;, poner un fondo blanco con &lt;code&gt;bg_color white&lt;/code&gt; y coloreando por elemento de acuerdo a su esquema clásico (carbonos blancos, nitrógenos y oxígenos en tonos azulados y rojizos, respectivamente):&lt;sup id="fnref:2"&gt;&lt;a class="footnote-ref" href="#fn:2" rel="footnote"&gt;2&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
+&lt;p&gt;Primero hay que cargar la estructura de 2LYZ (por ejemplo usando &lt;code&gt;fetch 2lyz&lt;/code&gt;), para luego remover las aguas con &lt;code&gt;remove solvent&lt;/code&gt;, mostrar la proteína como esferas usando &lt;code&gt;show spheres&lt;/code&gt;, poner un fondo blanco con &lt;code&gt;bg_color white&lt;/code&gt; y coloreando por elemento de acuerdo a su esquema clásico (carbonos blancos, nitrógenos, oxígenos y azufres en tonos azulados, rojizos y amarillentos, respectivamente):&lt;sup id="fnref:2"&gt;&lt;a class="footnote-ref" href="#fn:2" rel="footnote"&gt;2&lt;/a&gt;&lt;/sup&gt;&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;color white
 color lightblue, name N*
 color blue, resn ARG+LYS and sidechain and name N*
@@ -13,15 +13,14 @@ color red, resn GLU+ASP and sidechain and name O*
 color sulfur, name S*
 &lt;/code&gt;&lt;/pre&gt;
 &lt;p&gt;Una vez terminada la preparación de la escena, una forma sencilla de obtener la figura es utilizando estos comandos:&lt;/p&gt;
-&lt;pre&gt;&lt;code&gt;bg_color white
-unset specular
+&lt;pre&gt;&lt;code&gt;unset specular
 unset depth_cue
 set ambient, 0.6
 set ray_trace_mode, 1
 set ray_trace_depth_factor, 1
 set ray_trace_disco_factor, 1
 &lt;/code&gt;&lt;/pre&gt;
-&lt;p&gt;Luego de ejecutar el comando &lt;code&gt;ray&lt;/code&gt;, debería aparecer algo similar a esto:&lt;/p&gt;
+&lt;p&gt;Luego de renderizar mediante el comando &lt;code&gt;ray&lt;/code&gt;, debería aparecer algo similar a esto:&lt;/p&gt;
 &lt;p&gt;&lt;img alt="" src="/media/img/goodsell/2lyz.png" /&gt;&lt;/p&gt;
 &lt;p&gt;Es posible que sea necesario ajustar el parámetro &lt;code&gt;ambient&lt;/code&gt; para evitar la aparición del sombreado en las esferas.&lt;sup id="fnref:3"&gt;&lt;a class="footnote-ref" href="#fn:3" rel="footnote"&gt;3&lt;/a&gt;&lt;/sup&gt; Además, dependiendo del tamaño de la renderización quizás haya que modificar el valor de &lt;code&gt;ray_trace_gain&lt;/code&gt; para alterar el grosor de los bordes.&lt;/p&gt;
 &lt;h2&gt;Una manera más complicada&lt;/h2&gt;
@@ -159,7 +158,7 @@ Dependiendo de la ubicación en que estés cuando haces click en él, este bookm
 &lt;/li&gt;
 &lt;/ul&gt;
 &lt;p&gt;Al momento de inscribirme temía que el curso fuese demasiado complicado o que requiriera mucho tiempo, lo que me hubiese obligado a abandonarlo. Por fortuna, esa idea jamás pasó por mi cabeza. Al contrario, cada semana estaba pegado al monitor viendo las clases, mientras conceptos que anteriormente me costaba asimilar se volvían familiares. ¡Al finalizar el último ejercicio me encontré pidiendo más, cosa que pocos cursos presenciales habían logrado! Sólo me queda agradecer al profesor Pedersen y al personal de Coursera y DTU que hicieron posible el curso, por compartir su tiempo y conocimientos.&lt;/p&gt;
-&lt;p&gt;Claramente este MOOC dejó la vara alta para los próximos cursos de este tipo que planee tomar. De hecho, ya tomé dos más, relacionados con bioestadística: &lt;a href="http://www.coursera.org/course/casebasedbiostat"&gt;Case-Based Introduction to Biostatistics&lt;/a&gt; y &lt;a href="http://www.coursera.org/course/biostats"&gt;Mathematical Biostatistics Boot Camp 1&lt;/a&gt;. Probablemente será más dífícil completarlos que Computational Molecular Evolution, pero eso es tema para otro artículo.&lt;/p&gt;
+&lt;p&gt;Claramente este MOOC dejó la vara alta para los próximos cursos de este tipo que planee tomar. De hecho, ya tomé dos más, relacionados con bioestadística: &lt;a href="http://www.coursera.org/course/casebasedbiostat"&gt;Case-Based Introduction to Biostatistics&lt;/a&gt; y &lt;a href="http://www.coursera.org/course/biostats"&gt;Mathematical Biostatistics Boot Camp 1&lt;/a&gt;. Probablemente será más dífícil completarlos que Computational Molecular Evolution, pero eso es tema para otro artículo. Quizás.&lt;/p&gt;
 &lt;div class="footnote"&gt;
 &lt;hr /&gt;
 &lt;ol&gt;
@@ -176,7 +175,7 @@ Dependiendo de la ubicación en que estés cuando haces click en él, este bookm
 &lt;/blockquote&gt;
 &lt;p&gt;Sé que hay otras alternativas, como &lt;a href="http://westhoffswelt.de/projects/pdf_presenter_console.html"&gt;pdf-presenter-console&lt;/a&gt;, el cual es bueno, pero bastante básico y carece de algunas características que me gustan de Impressive, como las transiciones y la pantalla general con todas las diapositivas. Por suerte, a Seppe vanden Broucke se le ocurrió &lt;a href="http://blog.macuyiko.com/2009/12/buillding-presenter-view-for-linux.html"&gt;una gran solución&lt;/a&gt;. Él creó una pantalla de presentador en &lt;abbr title=""&gt;HTML&lt;/abbr&gt;. Cada vez que se muestra una diapositiva, y aprovechando sus capacidades de scripting, Impressive escribe algunos datos en un objeto &lt;abbr title=""&gt;JSON&lt;/abbr&gt; almacenado en un archivo de texto plano. Este archivo se carga en la pantalla de presentador usando jQuery. Bastante ingenioso, en mi opinión.&lt;/p&gt;
 &lt;p&gt;Entonces, tomé su código, cambié algunas cosas, e hice &lt;a href="http://github.com/flobosg/impressive-presenter"&gt;impressive-presenter&lt;/a&gt;.&lt;/p&gt;
-&lt;p&gt;&lt;img alt="impressive-presenter" src="/media/img/impressive-presenter.png" /&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img alt="impressive-presenter" src="/media/2013/02/impressive-presenter.png" /&gt;&lt;/p&gt;
 &lt;p&gt;Se recomienda el siguiente flujo de trabajo:&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;Haz tus diapositivas en &lt;abbr title=""&gt;PDF&lt;/abbr&gt; de la forma que quieras.&lt;/li&gt;

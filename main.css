@@ -46,7 +46,8 @@ html {
   color: #333333; }
 
 body {
-  font-size: 1.125em;
+  font-family: ETBook, Palatino, "Palatino Linotype", "Palatino LT STD", "Book Antiqua", Georgia, serif;
+  font-size: 1.1875em;
   line-height: 1.5em; }
 
 h1, h2, h3, h4, h5, h6 {
@@ -56,29 +57,29 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: normal; }
 
 h1 {
-  font-size: 1.44444444em;
-  line-height: 1.03846154em;
-  margin-bottom: 1.03846154em;
+  font-size: 1.42105263em;
+  line-height: 1.05555556em;
+  margin-bottom: 1.05555556em;
   font-weight: 600; }
 
 h2 {
-  font-size: 1.33333333em;
-  line-height: 1.125em;
-  margin-bottom: 1.125em;
+  font-size: 1.31578947em;
+  line-height: 1.14em;
+  margin-bottom: 1.14em;
   font-weight: 400;
   font-style: italic; }
 
 h3 {
-  font-size: 1.22222222em;
-  line-height: 1.22727273em;
-  margin-bottom: 1.22727273em;
+  font-size: 1.21052632em;
+  line-height: 1.23913043em;
+  margin-bottom: 1.23913043em;
   font-weight: 400;
   font-style: italic; }
 
 h4 {
-  font-size: 1.11111111em;
-  line-height: 1.35em;
-  margin-bottom: 1.35em;
+  font-size: 1.10526316em;
+  line-height: 1.35714286em;
+  margin-bottom: 1.35714286em;
   font-weight: 400;
   font-style: italic; }
 
@@ -133,9 +134,10 @@ a {
 img {
   max-width: 100%; }
 
-code, pre {
-  font-size: 0.875em;
-  line-height: 1.71428571em; }
+code {
+  font-size: 0.78947368em;
+  line-height: 1.9em;
+  font-family: "PT Mono", "PTMono", monospace; }
 
 pre {
   overflow: auto;
@@ -149,7 +151,18 @@ pre {
 article {
   padding: 0 20px; }
   article time {
+    display: block;
+    clear: both;
     color: #777777; }
+  article .translation {
+    display: block;
+    float: right;
+    clear: both;
+    font-size: 0.78947368em;
+    line-height: 1.9em;
+    max-width: 75%;
+    margin-bottom: 1.5em;
+    margin-top: -1.5em; }
 
 header {
   border-bottom: #dddddd 1px solid;
@@ -174,7 +187,7 @@ nav ul {
 
 .name::after {
   color: #505050;
-  content: "\02007\02022\02007"; }
+  content: "\02002\02022\02002"; }
 
 sub {
   top: 0.4em; }
