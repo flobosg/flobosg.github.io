@@ -251,6 +251,8 @@ section#content {
   margin-bottom: 1em; }
   #about p {
     margin-bottom: 0; }
+  #about .go {
+    display: block; }
   #about hr {
     border: 0;
     height: 1px;
