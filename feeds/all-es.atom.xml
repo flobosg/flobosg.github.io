@@ -24,7 +24,7 @@ set ray_trace_disco_factor, 1
 &lt;p&gt;&lt;img alt="" src="/media/img/goodsell/2lyz.png" /&gt;&lt;/p&gt;
 &lt;p&gt;Es posible que sea necesario ajustar el parámetro &lt;code&gt;ambient&lt;/code&gt; para evitar la aparición del sombreado en las esferas.&lt;sup id="fnref:3"&gt;&lt;a class="footnote-ref" href="#fn:3" rel="footnote"&gt;3&lt;/a&gt;&lt;/sup&gt; Además, dependiendo del tamaño de la renderización quizás haya que modificar el valor de &lt;code&gt;ray_trace_gain&lt;/code&gt; para alterar el grosor de los bordes.&lt;/p&gt;
 &lt;h2&gt;Una manera más complicada&lt;/h2&gt;
-&lt;p&gt;Bonnie Scott publicó hace un tiempo &lt;a href="http://www.bmc.med.utoronto.ca/bmcwiki/doku.php/students:how_to_recreate_the_goodsell_molecular_rendering_style"&gt;un tutorial&lt;/a&gt; en el cual ocupa dos metodologías para obtener el mismo resultado. Una usa &lt;a href="http://www.cgl.ucsf.edu/chimera/"&gt;Chimera&lt;/a&gt;, mientras que la otra emplea una combinación de &lt;a href="http://epmv.grahamj.com/"&gt;ePMV&lt;/a&gt; y Cinema 4D. Ambas aproximaciones consisten en renderizar por separado colores, sombras y bordes, para luego unirlas usando algún editor gráfico como Photoshop. Voy a adaptar esa estrategia para PyMOL. Este método es más engorroso que el anterior, pero permite un mayor control sobre el resultado final.&lt;/p&gt;
+&lt;p&gt;Bonnie Scott publicó hace un tiempo &lt;a href="http://www.bmc.med.utoronto.ca/bmcwiki/doku.php/students:how_to_recreate_the_goodsell_molecular_rendering_style"&gt;un tutorial&lt;/a&gt; en el cual ocupa dos metodologías para obtener figuras al estilo Goodsell. Una usa &lt;a href="http://www.cgl.ucsf.edu/chimera/"&gt;Chimera&lt;/a&gt;, mientras que la otra emplea una combinación de &lt;a href="http://epmv.grahamj.com/"&gt;ePMV&lt;/a&gt; y Cinema 4D. Ambas aproximaciones consisten en renderizar por separado colores, sombras y bordes, para luego unirlas usando algún editor gráfico como Photoshop. Voy a adaptar esa estrategia para PyMOL. Este método es más engorroso que el anterior, pero permite un mayor control sobre el resultado final.&lt;/p&gt;
 &lt;p&gt;En este caso voy a crear una imagen de la estructura de una proteína anticongelante del escarabajo &lt;em&gt;Rhagium inquisitor&lt;/em&gt; (PDB ID: &lt;a href="http://www.rcsb.org/pdb/explore.do?structureId=4DT5"&gt;4DT5&lt;/a&gt;). Primero hay que cargar la estructura y preparar la escena:&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;hide all
 remove solvent
@@ -39,14 +39,14 @@ bg_color black
 &lt;p&gt;Luego se renderizan:&lt;/p&gt;
 &lt;ol&gt;
 &lt;li&gt;
-&lt;p&gt;La máscara alfa de la proteína completa:&lt;/p&gt;
+&lt;p&gt;La máscara alfa de la proteína completa.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;color white, polymer
 ray 1000, 1000
 save protein.png
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;La máscara alfa de los átomos de nitrógeno y oxígeno:&lt;/p&gt;
+&lt;p&gt;La máscara alfa de los átomos de nitrógeno y oxígeno.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;color black, polymer
 color white, name N*+O*
 ray 1000, 1000
@@ -54,7 +54,7 @@ save n+o.png
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;Las sombras:&lt;/p&gt;
+&lt;p&gt;Las sombras.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;bg_color white
 util.ray_shadows('black')
 set reflect, 1
@@ -65,7 +65,7 @@ save shadows.png
 &lt;/code&gt;&lt;/pre&gt;
 &lt;/li&gt;
 &lt;li&gt;
-&lt;p&gt;Y, finalmente, el z-buffer&lt;sup id="fnref:4"&gt;&lt;a class="footnote-ref" href="#fn:4" rel="footnote"&gt;4&lt;/a&gt;&lt;/sup&gt;:&lt;/p&gt;
+&lt;p&gt;Y, finalmente, el z-buffer&lt;sup id="fnref:4"&gt;&lt;a class="footnote-ref" href="#fn:4" rel="footnote"&gt;4&lt;/a&gt;&lt;/sup&gt;.&lt;/p&gt;
 &lt;pre&gt;&lt;code&gt;bg_color black
 set depth_cue
 unset ray_shadow
@@ -87,9 +87,9 @@ save z-buffer.png
 &lt;/ol&gt;
 &lt;p&gt;Al finalizar estos pasos, se obtienen las siguientes capas:&lt;/p&gt;
 &lt;p&gt;&lt;img alt="" src="/media/img/goodsell/layers-2.jpg" /&gt;&lt;/p&gt;
-&lt;p&gt;La cuales se juntan (los bordes y sombras van apilados en modo Multiplicar) para obtener esto:&lt;/p&gt;
+&lt;p&gt;La cuales se juntan (los bordes y sombras van apilados en modo Multiplicar) para obtener la figura final:&lt;/p&gt;
 &lt;p&gt;&lt;img src="/media/img/goodsell/4dt5.jpg" style="width:80%;"&gt;&lt;/p&gt;
-&lt;p&gt;Como pueden ver, esta estructura contiene un arreglo muy ordenado de treoninas, encargadas de coordinar moléculas de agua, logrando detener el crecimiento de los cristales de hielo que crecen en el ambiente celular.&lt;/p&gt;
+&lt;p&gt;Como pueden ver, esta estructura contiene un arreglo muy ordenado de treoninas, encargadas de coordinar moléculas de agua, logrando detener el crecimiento de los cristales de hielo que aparecen en el ambiente celular.&lt;/p&gt;
 &lt;h2&gt;Más información&lt;/h2&gt;
 &lt;p&gt;Si quieren ver más sobre la obra de David Goodsell, revisen &lt;a href="http://mgl.scripps.edu/people/goodsell"&gt;su página web&lt;/a&gt;, la sección &lt;a href="http://www.rcsb.org/pdb/101/motm_archive.do"&gt;Molecule of the Month&lt;/a&gt; en el PDB, o su libro &lt;a href="http://mgl.scripps.edu/people/goodsell/books/MoL2-preview.html"&gt;The Machinery of Life&lt;/a&gt;, el cual contiene varias de sus ilustraciones.&lt;/p&gt;
 &lt;div class="footnote"&gt;
@@ -100,14 +100,14 @@ save z-buffer.png
 &lt;/li&gt;
 &lt;li id="fn:2"&gt;
 &lt;p&gt;Esta combinación aparece por última vez en MoTM en &lt;a href="http://www.pdb.org/pdb/101/motm.do?momID=70"&gt;octubre del 2005&lt;/a&gt;.
-Una paleta similar pero, en mi opinión, más moderna, apareció recientemente en la entrada de &lt;a href="http://www.pdb.org/pdb/101/motm.do?momID=162"&gt;junio del 2013&lt;/a&gt;.
-Actualmente Goodsell utiliza en la mayoría de las ocasiones colores arbitrarios para los carbonos y un tono más oscuro para nitrógeno, oxígeno y azufre.&amp;#160;&lt;a class="footnote-backref" href="#fnref:2" rev="footnote" title="Jump back to footnote 2 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+Una paleta similar pero, en mi opinión, más moderna, apareció en la entrada de &lt;a href="http://www.pdb.org/pdb/101/motm.do?momID=162"&gt;junio del 2013&lt;/a&gt;.
+Actualmente Goodsell utiliza en la mayoría de las ocasiones colores arbitrarios para el carbono y un tono más oscuro para nitrógeno, oxígeno y azufre.&amp;#160;&lt;a class="footnote-backref" href="#fnref:2" rev="footnote" title="Jump back to footnote 2 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;li id="fn:3"&gt;
 &lt;p&gt;El parámetro &lt;code&gt;ambient&lt;/code&gt; controla la cantidad de luz ambiente en la escena. Acepta valores entre 0 y 1, y por defecto es igual a 0.1.&amp;#160;&lt;a class="footnote-backref" href="#fnref:3" rev="footnote" title="Jump back to footnote 3 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;li id="fn:4"&gt;
-&lt;p&gt;A grandes rasgos, el &lt;a href="https://en.wikipedia.org/wiki/Z-buffering"&gt;z-buffer&lt;/a&gt; es una representación de la profundidad a la que se encuentran los objetos de una escena.&amp;#160;&lt;a class="footnote-backref" href="#fnref:4" rev="footnote" title="Jump back to footnote 4 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;A grandes rasgos, el &lt;a href="https://en.wikipedia.org/wiki/Z-buffering"&gt;z-buffer&lt;/a&gt; es una representación de la profundidad en la que se encuentran ubicados los objetos de una escena.&amp;#160;&lt;a class="footnote-backref" href="#fnref:4" rev="footnote" title="Jump back to footnote 4 in the text"&gt;&amp;#8617;&lt;/a&gt;&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
 &lt;/div&gt;</summary></entry><entry><title>Dos bookmarklets para Instapaper</title><link href="http://franciscolobos.com//es/bookmarklets-instapaper" rel="alternate"></link><updated>2014-08-16T01:36:00+02:00</updated><author><name>Francisco Lobos</name></author><id>tag:franciscolobos.com,2014-08-16:es/bookmarklets-instapaper</id><summary type="html">&lt;p&gt;Cuando era niño, leía todo lo que se me cruzaba por delante: libros, revistas, diarios, etc. Eso no ha cambiado mucho, salvo que ahora lo que leo principalmente son artículos en internet. Aquí es donde entra &lt;a href="https://www.instapaper.com/"&gt;Instapaper&lt;/a&gt;, el cual me ayuda a guardar cosas que no puedo revisar de inmediato, para luego leerlas cuando tenga más tiempo.

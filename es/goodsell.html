@@ -19,6 +19,7 @@
 	</nav>
 </header>    <section id="content">
         <article>
+            <a href="/en/goodsell" class="translation">English version: Reverse engineering David Goodsell</a>
             <time datetime="2015-11-10T00:53:10+01:00">10 de noviembre del 2015</time>
             <h1>Aplicando ingeniería reversa a David Goodsell</h1>
             <h2>Introducción</h2>
@@ -46,7 +47,7 @@ set ray_trace_disco_factor, 1
 <p><img alt="" src="/media/img/goodsell/2lyz.png" /></p>
 <p>Es posible que sea necesario ajustar el parámetro <code>ambient</code> para evitar la aparición del sombreado en las esferas.<sup id="fnref:3"><a class="footnote-ref" href="#fn:3" rel="footnote">3</a></sup> Además, dependiendo del tamaño de la renderización quizás haya que modificar el valor de <code>ray_trace_gain</code> para alterar el grosor de los bordes.</p>
 <h2>Una manera más complicada</h2>
-<p>Bonnie Scott publicó hace un tiempo <a href="http://www.bmc.med.utoronto.ca/bmcwiki/doku.php/students:how_to_recreate_the_goodsell_molecular_rendering_style">un tutorial</a> en el cual ocupa dos metodologías para obtener el mismo resultado. Una usa <a href="http://www.cgl.ucsf.edu/chimera/">Chimera</a>, mientras que la otra emplea una combinación de <a href="http://epmv.grahamj.com/">ePMV</a> y Cinema 4D. Ambas aproximaciones consisten en renderizar por separado colores, sombras y bordes, para luego unirlas usando algún editor gráfico como Photoshop. Voy a adaptar esa estrategia para PyMOL. Este método es más engorroso que el anterior, pero permite un mayor control sobre el resultado final.</p>
+<p>Bonnie Scott publicó hace un tiempo <a href="http://www.bmc.med.utoronto.ca/bmcwiki/doku.php/students:how_to_recreate_the_goodsell_molecular_rendering_style">un tutorial</a> en el cual ocupa dos metodologías para obtener figuras al estilo Goodsell. Una usa <a href="http://www.cgl.ucsf.edu/chimera/">Chimera</a>, mientras que la otra emplea una combinación de <a href="http://epmv.grahamj.com/">ePMV</a> y Cinema 4D. Ambas aproximaciones consisten en renderizar por separado colores, sombras y bordes, para luego unirlas usando algún editor gráfico como Photoshop. Voy a adaptar esa estrategia para PyMOL. Este método es más engorroso que el anterior, pero permite un mayor control sobre el resultado final.</p>
 <p>En este caso voy a crear una imagen de la estructura de una proteína anticongelante del escarabajo <em>Rhagium inquisitor</em> (PDB ID: <a href="http://www.rcsb.org/pdb/explore.do?structureId=4DT5">4DT5</a>). Primero hay que cargar la estructura y preparar la escena:</p>
 <pre><code>hide all
 remove solvent
@@ -61,14 +62,14 @@ bg_color black
 <p>Luego se renderizan:</p>
 <ol>
 <li>
-<p>La máscara alfa de la proteína completa:</p>
+<p>La máscara alfa de la proteína completa.</p>
 <pre><code>color white, polymer
 ray 1000, 1000
 save protein.png
 </code></pre>
 </li>
 <li>
-<p>La máscara alfa de los átomos de nitrógeno y oxígeno:</p>
+<p>La máscara alfa de los átomos de nitrógeno y oxígeno.</p>
 <pre><code>color black, polymer
 color white, name N*+O*
 ray 1000, 1000
@@ -76,7 +77,7 @@ save n+o.png
 </code></pre>
 </li>
 <li>
-<p>Las sombras:</p>
+<p>Las sombras.</p>
 <pre><code>bg_color white
 util.ray_shadows('black')
 set reflect, 1
@@ -87,7 +88,7 @@ save shadows.png
 </code></pre>
 </li>
 <li>
-<p>Y, finalmente, el z-buffer<sup id="fnref:4"><a class="footnote-ref" href="#fn:4" rel="footnote">4</a></sup>:</p>
+<p>Y, finalmente, el z-buffer<sup id="fnref:4"><a class="footnote-ref" href="#fn:4" rel="footnote">4</a></sup>.</p>
 <pre><code>bg_color black
 set depth_cue
 unset ray_shadow
@@ -109,9 +110,9 @@ save z-buffer.png
 </ol>
 <p>Al finalizar estos pasos, se obtienen las siguientes capas:</p>
 <p><img alt="" src="/media/img/goodsell/layers-2.jpg" /></p>
-<p>La cuales se juntan (los bordes y sombras van apilados en modo Multiplicar) para obtener esto:</p>
+<p>La cuales se juntan (los bordes y sombras van apilados en modo Multiplicar) para obtener la figura final:</p>
 <p><img src="/media/img/goodsell/4dt5.jpg" style="width:80%;"></p>
-<p>Como pueden ver, esta estructura contiene un arreglo muy ordenado de treoninas, encargadas de coordinar moléculas de agua, logrando detener el crecimiento de los cristales de hielo que crecen en el ambiente celular.</p>
+<p>Como pueden ver, esta estructura contiene un arreglo muy ordenado de treoninas, encargadas de coordinar moléculas de agua, logrando detener el crecimiento de los cristales de hielo que aparecen en el ambiente celular.</p>
 <h2>Más información</h2>
 <p>Si quieren ver más sobre la obra de David Goodsell, revisen <a href="http://mgl.scripps.edu/people/goodsell">su página web</a>, la sección <a href="http://www.rcsb.org/pdb/101/motm_archive.do">Molecule of the Month</a> en el PDB, o su libro <a href="http://mgl.scripps.edu/people/goodsell/books/MoL2-preview.html">The Machinery of Life</a>, el cual contiene varias de sus ilustraciones.</p>
 <div class="footnote">
@@ -122,14 +123,14 @@ save z-buffer.png
 </li>
 <li id="fn:2">
 <p>Esta combinación aparece por última vez en MoTM en <a href="http://www.pdb.org/pdb/101/motm.do?momID=70">octubre del 2005</a>.
-Una paleta similar pero, en mi opinión, más moderna, apareció recientemente en la entrada de <a href="http://www.pdb.org/pdb/101/motm.do?momID=162">junio del 2013</a>.
-Actualmente Goodsell utiliza en la mayoría de las ocasiones colores arbitrarios para los carbonos y un tono más oscuro para nitrógeno, oxígeno y azufre.&#160;<a class="footnote-backref" href="#fnref:2" rev="footnote" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+Una paleta similar pero, en mi opinión, más moderna, apareció en la entrada de <a href="http://www.pdb.org/pdb/101/motm.do?momID=162">junio del 2013</a>.
+Actualmente Goodsell utiliza en la mayoría de las ocasiones colores arbitrarios para el carbono y un tono más oscuro para nitrógeno, oxígeno y azufre.&#160;<a class="footnote-backref" href="#fnref:2" rev="footnote" title="Jump back to footnote 2 in the text">&#8617;</a></p>
 </li>
 <li id="fn:3">
 <p>El parámetro <code>ambient</code> controla la cantidad de luz ambiente en la escena. Acepta valores entre 0 y 1, y por defecto es igual a 0.1.&#160;<a class="footnote-backref" href="#fnref:3" rev="footnote" title="Jump back to footnote 3 in the text">&#8617;</a></p>
 </li>
 <li id="fn:4">
-<p>A grandes rasgos, el <a href="https://en.wikipedia.org/wiki/Z-buffering">z-buffer</a> es una representación de la profundidad a la que se encuentran los objetos de una escena.&#160;<a class="footnote-backref" href="#fnref:4" rev="footnote" title="Jump back to footnote 4 in the text">&#8617;</a></p>
+<p>A grandes rasgos, el <a href="https://en.wikipedia.org/wiki/Z-buffering">z-buffer</a> es una representación de la profundidad en la que se encuentran ubicados los objetos de una escena.&#160;<a class="footnote-backref" href="#fnref:4" rev="footnote" title="Jump back to footnote 4 in the text">&#8617;</a></p>
 </li>
 </ol>
 </div>

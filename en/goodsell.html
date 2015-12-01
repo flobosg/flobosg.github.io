@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <title>Reverse engineering David Goodsell</title>
+        <link href="/main.css" rel="stylesheet">
+        <link href="/fonts.css" rel="stylesheet">
+        <meta name="viewport" content="width=device-width">
+    </head>
+    <body>
+        <div id="container">
+<header>
+	<section class="name"><a href="/">Francisco Lobos</a></section>
+	<nav>
+		<ul>
+			<li><a href="/en">Posts</a></li>
+			<li><a href="/en/about">About</a></li>
+		</ul>
+	</nav>
+</header>    <section id="content">
+        <article>
+            <a href="/es/goodsell" class="translation">Versión en español: Aplicando ingeniería reversa a David Goodsell</a>
+            <time datetime="2015-12-01T23:00:42+01:00">December 1, 2015</time>
+            <h1>Reverse engineering David Goodsell</h1>
+            <h2>Introduction</h2>
+<p>For some time I have been interested in the relationship between art and structural biology. In particular, I am fascinated by the various ways of representing three-dimensional structures of biological macromolecules, either by computer graphics, animations, or tangible, physical models.</p>
+<p>Like many people, I like the unique style in which David Goodsell illustrates the structures of the <a href="http://www.rcsb.org/pdb/101/motm_archive.do">Molecule of the Month</a> (MotM) section in the Protein Data Bank. However, reproducing the way he renders molecules is not a straightforward task. To generate the figures in MoTM <a href="http://www.rcsb.org/pdb/static.do?p=education_discussion/molecule_of_the_month/about.html">Goodsell uses some software he developed</a> (apparently in Fortran, according to <a href="http://www.scilogs.de/detritus/david-goodsell-molek-l-k-nstler-und-wissenschaftler/">this German link</a>). There are several tutorials and tools to emulate his rendering style<sup id="fnref:1"><a class="footnote-ref" href="#fn:1" rel="footnote">1</a></sup>, but none of these fully convince me. However, I took some ideas from them and managed to develop two methods using PyMOL. At first I just wanted to get an idea of how to do some figures with Goodsell&rsquo;s style, but it became kind of an obsession. I hope you will find this post useful.</p>
+<h2>An easy way using just PyMOL</h2>
+<p>To begin with, I will reproduce the figure that appears on the <a href="http://www.rcsb.org/pdb/101/motm.do?momID=9">September 2000 entry of MotM</a>, corresponding to hen egg white lysozyme (PDB ID: <a href="http://www.rcsb.org/pdb/explore.do?structureId=2LYZ">2LYZ</a>).</p>
+<p>First load the structure of 2LYZ (for example by using <code>fetch 2lyz</code>),
+then remove the water molecules with <code>remove solvent</code> , display the protein as CPK spheres with <code>show spheres</code>, put a white background with <code>bg_color white</code> and color the atoms by element according to the classical scheme (carbon in white, nitrogen, oxygen and sulfur in blue, red and yellow, respectively).<sup id="fnref:2"><a class="footnote-ref" href="#fn:2" rel="footnote">2</a></sup></p>
+<pre><code>color white
+color lightblue, name N*
+color blue, resn ARG+LYS and sidechain and name N*
+color salmon, name O*
+color red, resn GLU+ASP and sidechain and name O*
+color sulfur, name S*
+</code></pre>
+<p>Once the scene is prepared, a simple way to get the figure is using the following commands:</p>
+<pre><code>unset specular
+unset depth_cue
+set ambient, 0.6
+set ray_trace_mode, 1
+set ray_trace_depth_factor, 1
+set ray_trace_disco_factor, 1
+</code></pre>
+<p>After rendering with <code>ray</code>, something like this appears:</p>
+<p><img alt="" src="/media/img/goodsell/2lyz.png" /></p>
+<p>It may be necessary to adjust the <code>ambient</code> variable to get rid of the shading on the spheres.<sup id="fnref:3"><a class="footnote-ref" href="#fn:3" rel="footnote">3</a></sup> Besides, depending on the render size, <code>ray_trace_gain</code> has to be modified to alter the thickness of the borders.</p>
+<h2>A more complex method</h2>
+<p>Bonnie Scott published a while ago <a href="http://www.bmc.med.utoronto.ca/bmcwiki/doku.php/students:how_to_recreate_the_goodsell_molecular_rendering_style">a tutorial</a> where she uses two methods to achieve Goodsell&rsquo;s style. One uses Chimera, while the other uses a combination of <a href="http://epmv.grahamj.com/">ePMV</a> and Cinema4D. Both approaches consist in rendering colors, shadows and outlines separately, and then merging them using a graphics editor such as Photoshop. I will adapt this strategy to PyMOL. This method is more cumbersome than the previous one, but allows more control over the end result.</p>
+<p>In this instance I&rsquo;m creating the image of an antifreeze protein from the beetle <em>Rhagium inquisitor</em> (PDB ID: <a href="http://www.rcsb.org/pdb/explore.do?structureId=4DT5">4DT5</a>). First load the structure and prepare the scene:</p>
+<pre><code>hide all
+remove solvent
+remove hetatm
+show spheres, polymer
+unset depth_cue
+unset specular
+unset ray_shadow
+set ambient, 1
+bg_color black
+</code></pre>
+<p>Then render:</p>
+<ol>
+<li>
+<p>The alpha mask of the whole protein.</p>
+<pre><code>color white, polymer
+ray 1000, 1000
+save protein.png
+</code></pre>
+</li>
+<li>
+<p>The alpha mask of nitrogen and oxygen atoms.</p>
+<pre><code>color black, polymer
+color white, name N*+O*
+ray 1000, 1000
+save n+o.png
+</code></pre>
+</li>
+<li>
+<p>Shadows.</p>
+<pre><code>bg_color white
+util.ray_shadows('black')
+set reflect, 1
+set reflect_power, 0
+color white, polymer
+ray 1000, 1000
+save shadows.png
+</code></pre>
+</li>
+<li>
+<p>And finally the z-buffer<sup id="fnref:4"><a class="footnote-ref" href="#fn:4" rel="footnote">4</a></sup>.</p>
+<pre><code>bg_color black
+set depth_cue
+unset ray_shadow
+set fog_start, 0
+clip atoms, 2, all
+color white, polymer
+ray 1000, 1000
+save z-buffer.png
+</code></pre>
+</li>
+</ol>
+<p>With them the following images are obtained:</p>
+<p><img alt="" src="/media/img/goodsell/layers.jpg" /></p>
+<p>These have to be opened as layers in Photoshop, GIMP, etc. and processed as follows:</p>
+<ol>
+<li>The alpha mask from the whole protein, the nitrogens and oxygens are transformed into a quick mask and filled with the chosen color.</li>
+<li>This step is optional: Gaussian blur is applied on the shadows layer and then it is clipped to the alpha mask of the whole protein.</li>
+<li>From the z-buffer the protein outline can be obtained using, for example, the Sobel operator in GIMP (Filters ‣ Edge-Detect ‣ Edge) or the Find Edges filter in Photoshop (Filter ‣  Stylize ‣ Find Edges). Then levels or curves need to be adjusted to remove the faint outlines from the inside of the spheres.</li>
+</ol>
+<p>At the end of these steps, the layers should end up like this:</p>
+<p><img alt="" src="/media/img/goodsell/layers-2.jpg" /></p>
+<p>These are combined (borders and shadows are in Multiply mode) to get the final figure:</p>
+<p><img src="/media/img/goodsell/4dt5.jpg" style="width:80%;"></p>
+<p>As you can see, this structure has a highly ordered array of threonines in charge of coordinating water molecules, stopping the growth of the ice crystals present in the cellular environment.</p>
+<h2>More information</h2>
+<p>If you want to know more about the work of David Goodsell, check out his web page, the section <a href="http://www.rcsb.org/pdb/101/motm_archive.do">Molecule of the Month</a> on the PDB or his book <a href="http://mgl.scripps.edu/people/goodsell/books/MoL2-preview.html">The Machinery of Life</a>, which has many of his illustrations.</p>
+<div class="footnote">
+<hr />
+<ol>
+<li id="fn:1">
+<p>For example: Using GLSL shaders in <a href="https://kpwu.wordpress.com/2012/06/28/pymol-draw-goodsell-like-view-using-glsl/">PyMOL</a> and <a href="http://www.ks.uiuc.edu/Research/vmd/minitutorials/glsloutline/">VMD</a>. <a href="http://chemistry.stackexchange.com/questions/484/what-software-is-used-to-generate-the-pdb-molecule-of-the-month-images#486">Tutorial at Chemistry Stack Exchange</a> with VMD, Blender, and Photoshop. Tutorials in <a href="http://www.pymolwiki.org/index.php/Gallery">PyMOL</a>, <a href="http://www.cgl.ucsf.edu/chimera/ImageGallery/entries/clathrin/clathrin.html">Chimera</a> and <a href="http://pmvbase.blogspot.de/2010/04/making-david-goodsell-like.html">PMV</a>. There are also programs such as <a href="http://qutemol.sourceforge.net/">Qutemol</a> and <a href="http://people.cryst.bbk.ac.uk/~ubcg05s/zink/zink.htm">Zink!</a>.&#160;<a class="footnote-backref" href="#fnref:1" rev="footnote" title="Jump back to footnote 1 in the text">&#8617;</a></p>
+</li>
+<li id="fn:2">
+<p>This combination appears last in MoTM in <a href="http://www.pdb.org/pdb/101/motm.do?momID=70">October 2005</a>.
+A similar and in my opinion more modern palette appeared on the <a href="http://www.pdb.org/pdb/101/motm.do?momID=162">June 2013</a> entry.
+Goodsell currently uses in most cases arbitrary colors for carbon and darker shades for nitrogen, oxygen and sulfur.&#160;<a class="footnote-backref" href="#fnref:2" rev="footnote" title="Jump back to footnote 2 in the text">&#8617;</a></p>
+</li>
+<li id="fn:3">
+<p>The <code>ambient</code> parameter controls the amount of ambient light in the scene. It accepts values between 0 and 1, and is 0.1 by default.&#160;<a class="footnote-backref" href="#fnref:3" rev="footnote" title="Jump back to footnote 3 in the text">&#8617;</a></p>
+</li>
+<li id="fn:4">
+<p>Roughly speaking, the z-buffer is a representation of the depth in which the objects of a scene are located.&#160;<a class="footnote-backref" href="#fnref:4" rev="footnote" title="Jump back to footnote 4 in the text">&#8617;</a></p>
+</li>
+</ol>
+</div>
+        </article>
+            <footer>
+                <p>
+                    Do you have something to say? <a href="/en/about#contact">Contact me</a>.
+                </p>
+            </footer>
+        </div>
+    </body>
+</html>
