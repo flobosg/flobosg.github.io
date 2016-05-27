@@ -338,8 +338,8 @@ section#content {
   nav {
     clear: both;
   }
-  
 }
+
 @media (max-width: 500px) {
   body {
     font-size: 0.88888888em;
@@ -372,14 +372,14 @@ section#content {
   pre {
     font-size: 0.875em;
   }
-  
 }
+
 @media (max-width: 580px) {
   .post-list li {
     margin-bottom: 1.5em;
     padding-right: 20px;
   }
-  
+
   .post-list li time {
     display: none;
   }
@@ -388,5 +388,5 @@ section#content {
     width: 100%;
     text-align: center;
   }
-  
 }
+
